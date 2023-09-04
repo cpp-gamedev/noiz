@@ -25,3 +25,4 @@ endfunction()
 
 add_noiz_test(vec2 test_vec2.cpp)
 add_noiz_test(generator test_generator.cpp)
+add_noiz_test(grid2 test_grid2.cpp)

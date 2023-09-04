@@ -32,6 +32,11 @@ struct Vec2 {
 
 	[[nodiscard]] constexpr auto is_normalized() const -> bool { return std::abs(sqr_magnitude() - Type(1)) < epsilon_v; }
 
+	[[nodiscard]] auto modulo(Vec2<Type> const extent) const -> Vec2<Type> {
+		assert(extent.x > Type(0) && extent.y > Type(0));
+		return Vec2<Type>{.x = std::fmod(x, extent.x), .y = std::fmod(y, extent.y)};
+	}
+
 	constexpr auto operator+=(Vec2 const rhs) -> Vec2& {
 		x += rhs.x;
 		y += rhs.y;
@@ -67,6 +72,11 @@ struct Vec2 {
 template <std::floating_point Type>
 constexpr auto dot(Vec2<Type> const lhs, Vec2<Type> const rhs) -> Type {
 	return lhs.x * rhs.x + lhs.y * rhs.y;
+}
+
+template <std::floating_point Type>
+constexpr auto compare(Vec2<Type> const lhs, Vec2<Type> const rhs, Type const epsilon = Type(0.001)) {
+	return std::abs(lhs.x - rhs.x) < epsilon && std::abs(lhs.y - rhs.y) < epsilon;
 }
 
 template <std::floating_point Type>

@@ -69,6 +69,14 @@ constexpr auto dot(Vec2<Type> const lhs, Vec2<Type> const rhs) -> Type {
 	return lhs.x * rhs.x + lhs.y * rhs.y;
 }
 
+template <std::floating_point Type>
+constexpr auto lerp(Vec2<Type> const lhs, Vec2<Type> const rhs, Type alpha) -> Vec2<Type> {
+	return Vec2<Type>{
+		.x = std::lerp(lhs.x, rhs.x, alpha),
+		.y = std::lerp(lhs.y, rhs.y, alpha),
+	};
+}
+
 using Vec2f = Vec2<float>;
 using Vec2d = Vec2<double>;
 } // namespace noiz

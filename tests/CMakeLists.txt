@@ -24,3 +24,4 @@ function(add_noiz_test NAME SOURCES)
 endfunction()
 
 add_noiz_test(vec2 test_vec2.cpp)
+add_noiz_test(generator test_generator.cpp)

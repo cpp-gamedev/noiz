@@ -10,11 +10,17 @@ struct Corner2 {
 	Vec2<Type> gradient{};
 };
 
-template <std::floating_point Type>
-struct Cell2 {
-	Corner2<Type> left_top{};
-	Corner2<Type> right_top{};
-	Corner2<Type> left_bottom{};
-	Corner2<Type> right_bottom{};
+template <typename Type>
+struct TCell2 {
+	Type left_top{};
+	Type right_top{};
+	Type left_bottom{};
+	Type right_bottom{};
 };
+
+template <std::floating_point Type>
+using Cell2 = TCell2<Vec2<Type>>;
+
+template <std::floating_point Type>
+using CornerCell2 = TCell2<Corner2<Type>>;
 } // namespace noiz

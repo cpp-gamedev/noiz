@@ -37,6 +37,8 @@ struct Vec2 {
 		return Vec2<Type>{.x = std::fmod(x, extent.x), .y = std::fmod(y, extent.y)};
 	}
 
+	[[nodiscard]] constexpr auto fract() const -> Vec2<Type> { return Vec2<Type>{.x = x - std::floor(x), .y = y - std::floor(y)}; }
+
 	constexpr auto operator+=(Vec2 const rhs) -> Vec2& {
 		x += rhs.x;
 		y += rhs.y;

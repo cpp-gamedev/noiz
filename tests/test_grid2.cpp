@@ -9,32 +9,32 @@ void grid_make() {
 }
 
 void grid_cell_loc() {
-	auto grid_size = noiz::Index2{3, 3};
-	auto loc = noiz::CellIndex2::make({0, 0}, grid_size);
+	auto grid_extent = noiz::Index2{3, 3};
+	auto loc = noiz::CellIndex2::make({0, 0}, grid_extent);
 	EXPECT(loc.lt == 0 && loc.rt == 1 && loc.lb == 4 && loc.rb == 5);
-	loc = noiz::CellIndex2::make({1, 0}, grid_size);
+	loc = noiz::CellIndex2::make({1, 0}, grid_extent);
 	EXPECT(loc.lt == 1 && loc.rt == 2 && loc.lb == 5 && loc.rb == 6);
-	loc = noiz::CellIndex2::make({2, 0}, grid_size);
+	loc = noiz::CellIndex2::make({2, 0}, grid_extent);
 	EXPECT(loc.lt == 2 && loc.rt == 3 && loc.lb == 6 && loc.rb == 7);
-	loc = noiz::CellIndex2::make({0, 1}, grid_size);
+	loc = noiz::CellIndex2::make({0, 1}, grid_extent);
 	EXPECT(loc.lt == 4 && loc.rt == 5 && loc.lb == 8 && loc.rb == 9);
-	loc = noiz::CellIndex2::make({1, 1}, grid_size);
+	loc = noiz::CellIndex2::make({1, 1}, grid_extent);
 	EXPECT(loc.lt == 5 && loc.rt == 6 && loc.lb == 9 && loc.rb == 10);
-	loc = noiz::CellIndex2::make({2, 1}, grid_size);
+	loc = noiz::CellIndex2::make({2, 1}, grid_extent);
 	EXPECT(loc.lt == 6 && loc.rt == 7 && loc.lb == 10 && loc.rb == 11);
-	loc = noiz::CellIndex2::make({0, 2}, grid_size);
+	loc = noiz::CellIndex2::make({0, 2}, grid_extent);
 	EXPECT(loc.lt == 8 && loc.rt == 9 && loc.lb == 12 && loc.rb == 13);
-	loc = noiz::CellIndex2::make({1, 2}, grid_size);
+	loc = noiz::CellIndex2::make({1, 2}, grid_extent);
 	EXPECT(loc.lt == 9 && loc.rt == 10 && loc.lb == 13 && loc.rb == 14);
-	loc = noiz::CellIndex2::make({2, 2}, grid_size);
+	loc = noiz::CellIndex2::make({2, 2}, grid_extent);
 	EXPECT(loc.lt == 10 && loc.rt == 11 && loc.lb == 14 && loc.rb == 15);
-	loc = noiz::CellIndex2::make({3, 3}, grid_size);
+	loc = noiz::CellIndex2::make({3, 3}, grid_extent);
 	EXPECT(loc.lt == 0 && loc.rt == 1 && loc.lb == 4 && loc.rb == 5);
 
-	grid_size = noiz::Index2{4, 4};
-	loc = noiz::CellIndex2::make({0, 0}, grid_size);
+	grid_extent = noiz::Index2{4, 4};
+	loc = noiz::CellIndex2::make({0, 0}, grid_extent);
 	EXPECT(loc.lt == 0 && loc.rt == 1 && loc.lb == 5 && loc.rb == 6);
-	loc = noiz::CellIndex2::make({1, 1}, grid_size);
+	loc = noiz::CellIndex2::make({1, 1}, grid_extent);
 	EXPECT(loc.lt == 6 && loc.rt == 7 && loc.lb == 11 && loc.rb == 12);
 }
 

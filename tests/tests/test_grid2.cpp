@@ -1,14 +1,13 @@
 #include <noiz/detail/grid2.hpp>
 #include <test/test.hpp>
 
-namespace test {
 namespace {
-void grid_make() {
+ADD_TEST(grid_make) {
 	auto grid = noiz::detail::make_grid2<float>({3, 3});
 	ASSERT(grid.corners.size() == 16);
 }
 
-void grid_cell_loc() {
+ADD_TEST(grid_cell_loc) {
 	auto grid_extent = noiz::Index2{3, 3};
 	auto loc = noiz::CellIndex2::make({0, 0}, grid_extent);
 	EXPECT(loc.lt == 0 && loc.rt == 1 && loc.lb == 4 && loc.rb == 5);
@@ -38,7 +37,7 @@ void grid_cell_loc() {
 	EXPECT(loc.lt == 6 && loc.rt == 7 && loc.lb == 11 && loc.rb == 12);
 }
 
-void grid_index() {
+ADD_TEST(grid_index) {
 	static constexpr auto corners_v = std::array<noiz::Vec2f, 4>{
 		noiz::Vec2f{1.0f, 2.0f},
 		noiz::Vec2f{3.0f, 4.0f},
@@ -63,17 +62,4 @@ void grid_index() {
 	EXPECT(compare(cell.left_bottom.location, noiz::Vec2f{1, 2}));
 	EXPECT(compare(cell.right_bottom.location, noiz::Vec2f{2, 2}));
 }
-
-auto run() -> bool {
-	ADD_TEST(grid_make);
-	ADD_TEST(grid_cell_loc);
-	ADD_TEST(grid_index);
-
-	return run_tests();
-}
 } // namespace
-} // namespace test
-
-auto main() -> int {
-	if (!test::run()) { return EXIT_FAILURE; }
-}

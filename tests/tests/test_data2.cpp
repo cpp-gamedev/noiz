@@ -1,11 +1,10 @@
 #include <noiz/detail/data2.hpp>
 #include <test/test.hpp>
 
-namespace test {
 namespace {
-void noise_offsets() {
+ADD_TEST(noise_offsets) {
 	auto const grid = noiz::detail::make_populated_grid<float>(noiz::Index2{5, 5}); // NOLINT
-	auto const expect_equidistant = [](noiz::Cell2<float> const& offset) {
+	auto const expect_equidistant = [&](noiz::Cell2<float> const& offset) {
 		EXPECT(compare(offset.left_top, noiz::Vec2f{0.5f, 0.5f}));		 // NOLINT
 		EXPECT(compare(offset.right_top, noiz::Vec2f{-0.5f, 0.5f}));	 // NOLINT
 		EXPECT(compare(offset.left_bottom, noiz::Vec2f{0.5f, -0.5f}));	 // NOLINT
@@ -27,15 +26,4 @@ void noise_offsets() {
 		point.x = 0.5f; // NOLINT
 	}
 }
-
-auto run() -> bool {
-	ADD_TEST(noise_offsets);
-
-	return run_tests();
-}
 } // namespace
-} // namespace test
-
-auto main() -> int {
-	if (!test::run()) { return EXIT_FAILURE; }
-}

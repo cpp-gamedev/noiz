@@ -1,29 +1,24 @@
-project(noiz-tests)
+project(noiz-test)
 
-add_library(noiz-test)
+add_library(${PROJECT_NAME})
 
-target_sources(noiz-test PRIVATE
+target_sources(${PROJECT_NAME} PRIVATE
   test/test.cpp
   test/test.hpp
 )
 
-target_link_libraries(noiz-test PUBLIC
+target_link_libraries(${PROJECT_NAME} PUBLIC
   noiz::noiz-lib
   noiz::noiz-compile-options
 )
 
-target_include_directories(noiz-test PUBLIC
+target_include_directories(${PROJECT_NAME} PUBLIC
   .
 )
 
-function(add_noiz_test NAME SOURCES)
-  add_executable(noiz-test-${NAME})
-  target_sources(noiz-test-${NAME} PRIVATE ${SOURCES})
-  target_link_libraries(noiz-test-${NAME} PRIVATE noiz-test)
-  add_test(NAME noiz-test-${NAME} COMMAND noiz-test-${NAME})
-endfunction()
+add_subdirectory(tests)
 
-add_noiz_test(vec2 test_vec2.cpp)
-add_noiz_test(generator test_generator.cpp)
-add_noiz_test(grid2 test_grid2.cpp)
-add_noiz_test(data2 test_data2.cpp)
+# add_noiz_test(vec2 test_vec2.cpp)
+# add_noiz_test(generator test_generator.cpp)
+# add_noiz_test(grid2 test_grid2.cpp)
+# add_noiz_test(data2 test_data2.cpp)

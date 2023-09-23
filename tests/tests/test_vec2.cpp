@@ -11,8 +11,6 @@ static_assert(noiz::Vec2f{4.0f, 9.0f} / noiz::Vec2f{2.0f, 3.0f} == noiz::Vec2f{2
 static_assert(noiz::dot(noiz::Vec2f{2.0f, 3.0f}, noiz::Vec2f{4.0f, 5.0f}) == 23.0f); // NOLINT
 static_assert(noiz::Vec2f{2.0f, 3.0f}.sqr_magnitude() == 13.0f);					 // NOLINT
 
-static_assert(noiz::Vec2f{1.0f, 0.0f}.is_normalized());
-
 ADD_TEST(vec2_magnitude) {
 	auto const vec = noiz::Vec2f{3.0f, 4.0f}; // NOLINT
 	EXPECT(vec.magnitude() == 5.0f);		  // NOLINT

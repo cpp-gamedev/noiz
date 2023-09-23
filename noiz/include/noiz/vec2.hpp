@@ -30,7 +30,7 @@ struct Vec2 {
 		return ret;
 	}
 
-	[[nodiscard]] constexpr auto is_normalized() const -> bool { return std::abs(sqr_magnitude() - Type(1)) < epsilon_v; }
+	[[nodiscard]] auto is_normalized() const -> bool { return std::abs(sqr_magnitude() - Type(1)) < epsilon_v; }
 
 	[[nodiscard]] auto modulo(Vec2<Type> const extent) const -> Vec2<Type> {
 		assert(extent.x > Type(0) && extent.y > Type(0));

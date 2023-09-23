@@ -13,6 +13,7 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 endif()
 
 option(NOIZ_BUILD_TESTS "Build noiz tests" ${is_project_root})
+option(NOIZ_BUILD_EXAMPLES "Build noiz examples" ${is_project_root})
 
 add_library(noiz-compile-options INTERFACE)
 add_library(noiz::noiz-compile-options ALIAS noiz-compile-options)
@@ -28,6 +29,10 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL MSVC)
 endif()
 
 add_subdirectory(noiz)
+
+if(NOIZ_BUILD_EXAMPLES)
+  add_subdirectory(examples)
+endif()
 
 if(NOIZ_BUILD_TESTS)
   enable_testing()

@@ -147,7 +147,7 @@ class HistogramBitmap {
 	};
 
 	explicit HistogramBitmap(int imageSizeFactor, int dataCount) {
-		imageSize *= imageSizeFactor;
+		imageSize *= static_cast<uint8_t>(imageSizeFactor);
 		heightValues.reserve(dataCount);
 	}
 
@@ -179,8 +179,8 @@ class HistogramBitmap {
 
 		for(int i = 1; i < imageSize - 1; i++) {
 			float exactPoint = static_cast<float>(i) / stepSizeOfBaseGraph;
-			uint16_t lastPoint = std::floor(exactPoint);
-			uint16_t nextPoint = std::ceil(exactPoint);
+			uint16_t lastPoint = static_cast<uint16_t>(std::floor(exactPoint));
+			uint16_t nextPoint = static_cast<uint16_t>(std::ceil(exactPoint));
 			float weighting = exactPoint - (float)lastPoint;
 			interpolatedHeight[i] = std::lerp(heightValues[lastPoint], heightValues[nextPoint], weighting);
 		}

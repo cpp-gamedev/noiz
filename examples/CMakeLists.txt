@@ -1,2 +1,2 @@
 add_subdirectory(histogram)
-add_subdirectory(HistogramBitmap)
+add_subdirectory(histogram_bitmap)

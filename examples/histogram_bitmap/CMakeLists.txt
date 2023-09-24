@@ -1,4 +1,4 @@
-project(noiz-HistogramBitmap)
+project(noiz-histogram_bitmap)
 
 add_executable(${PROJECT_NAME})
 
@@ -8,5 +8,5 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 )
 
 target_sources(${PROJECT_NAME} PRIVATE
-  HistogramBitmap.cpp
+  histogram_bitmap.cpp
 )

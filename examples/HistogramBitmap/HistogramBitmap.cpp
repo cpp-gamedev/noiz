@@ -178,7 +178,7 @@ class HistogramBitmap {
 		interpolatedHeight[0] = heightValues[0];
 		interpolatedHeight.back() = heightValues.back();
 
-		for(int i = 1; i < imageSize - 1; i++) {
+		for(uint16_t i = 1; i < imageSize - 1; i++) {
 			float exactPoint = static_cast<float>(i) / stepSizeOfBaseGraph;
 			uint16_t lastPoint = static_cast<uint16_t>(std::floor(exactPoint));
 			uint16_t nextPoint = static_cast<uint16_t>(std::ceil(exactPoint));
@@ -187,8 +187,8 @@ class HistogramBitmap {
 		}
 
 		writeBitmapFileHeader(imageSize, outFile);
-		for(int y = 0; y < imageSize; y++) {
-			for(int x = 0; x < imageSize; x++) {
+		for(uint16_t y = 0; y < imageSize; y++) {
+			for(uint16_t x = 0; x < imageSize; x++) {
 				if(interpolatedHeight.at(x) >= (float)y) {
 					histogramColor.writeToFile(outFile);
 				}

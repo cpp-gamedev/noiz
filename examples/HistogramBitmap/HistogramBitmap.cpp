@@ -148,7 +148,8 @@ class HistogramBitmap {
 
 	explicit HistogramBitmap(int imageSizeFactor, int dataCount) {
 		imageSize *= static_cast<uint8_t>(imageSizeFactor);
-		heightValues.reserve(dataCount);
+		heightValues.reserve(static_cast<size_t>(dataCount));
+		
 	}
 
 
@@ -182,14 +183,13 @@ class HistogramBitmap {
 			uint16_t lastPoint = static_cast<uint16_t>(std::floor(exactPoint));
 			uint16_t nextPoint = static_cast<uint16_t>(std::ceil(exactPoint));
 			float weighting = exactPoint - (float)lastPoint;
-			interpolatedHeight[i] = std::lerp(heightValues[lastPoint], heightValues[nextPoint], weighting);
+			interpolatedHeight.at(i) = std::lerp(heightValues.at(lastPoint), heightValues.at(nextPoint), weighting);
 		}
 
 		writeBitmapFileHeader(imageSize, outFile);
-		Color outColor;
 		for(int y = 0; y < imageSize; y++) {
 			for(int x = 0; x < imageSize; x++) {
-				if(interpolatedHeight[x] >= (float)y) {
+				if(interpolatedHeight.at(x) >= (float)y) {
 					histogramColor.writeToFile(outFile);
 				}
 				else{

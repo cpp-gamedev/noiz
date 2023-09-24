@@ -14,7 +14,7 @@
 		uint32_t reservedBytes = 0;
 		uint32_t pixelDataOffset = 54;
 
-		BmpHeader(size_t imageSize) {
+		BmpHeader(uint16_t imageSize) {
 			sizeOfBitmapFile += imageSize * imageSize * 3; //rgb, 1 byte per color
 		}
 		void writeToFile(std::ofstream& outFile){
@@ -40,7 +40,7 @@
 		uint32_t colorTableEntries = 0;
 		uint32_t importantColors = 0;
 
-		BmpInfoHeader(size_t imageSize){
+		BmpInfoHeader(uint16_t imageSize){
 			width = imageSize;
 			height = imageSize;
 		}
@@ -120,7 +120,7 @@ struct Config {
 	}
 };
 
-void writeBitmapFileHeader(size_t imageSize, std::ofstream& outFile) {
+void writeBitmapFileHeader(uint16_t imageSize, std::ofstream& outFile) {
 
 	assert(outFile.is_open());
 	BmpHeader bmpHeader{imageSize};
@@ -153,13 +153,13 @@ class HistogramBitmap {
 
 
 	auto add(float const value) -> HistogramBitmap& {
-		heightValues.push_back(static_cast<std::size_t>((value + 1.0f) * 0.5f * static_cast<float>(imageSize)));
+		heightValues.push_back((value + 1.0f) * 0.5f * static_cast<float>(imageSize));
 
 		return *this;
 	}
 
 	void writeImage() {
-		std::vector<uint16_t> interpolatedHeight;
+		std::vector<float> interpolatedHeight;
 		interpolatedHeight.resize(imageSize);
 		float stepSizeOfBaseGraph = static_cast<float>(imageSize) / static_cast<float>(heightValues.size() - 1);
 
@@ -189,7 +189,7 @@ class HistogramBitmap {
 		Color outColor;
 		for(int y = 0; y < imageSize; y++) {
 			for(int x = 0; x < imageSize; x++) {
-				if(interpolatedHeight[x] >= y) {
+				if(interpolatedHeight[x] >= (float)y) {
 					histogramColor.writeToFile(outFile);
 				}
 				else{
@@ -207,7 +207,7 @@ class HistogramBitmap {
 	uint16_t imageSize = 256;
 	Color backgroundColor{.red = 0, .green = 0, .blue = 0};
 	Color histogramColor{.red = 0, .green = 127, .blue = 0};
-	std::vector<size_t> heightValues;
+	std::vector<float> heightValues;
 };
 } // namespace
 

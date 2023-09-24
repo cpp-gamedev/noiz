@@ -5,6 +5,10 @@ out/*
 screenshots
 .cache
 .DS_Store
+*.bak
+*.log
+examples/histogram_bitmap/
+
 
 CMakeSettings.json
 compile_commands.json

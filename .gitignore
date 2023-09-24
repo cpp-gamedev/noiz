@@ -5,6 +5,8 @@ out/*
 screenshots
 .cache
 .DS_Store
+*.log
+*.bak
 
 CMakeSettings.json
 compile_commands.json

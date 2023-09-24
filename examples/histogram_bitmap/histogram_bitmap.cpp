@@ -169,7 +169,7 @@ class Histogram_Bitmap {
 			const float exactPoint = static_cast<float>(i) / resolution_conversion_real_to_pixel;
 			const float flooredValue = std::floor(exactPoint);
 
-			height_in_pixels.at(i) = heightValues.at(static_cast<uint16_t>(flooredValue) + (exactPoint >= 0.5f));
+			height_in_pixels.at(i) = heightValues.at(static_cast<uint16_t>(flooredValue) + ((exactPoint - flooredValue) >= 0.5f));
 		}
 
 		Bmp_Header::write_bmp_file_header(image_size, out_file);

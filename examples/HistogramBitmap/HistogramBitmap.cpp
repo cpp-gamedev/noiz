@@ -111,7 +111,7 @@ struct Config {
 		if (!args.next_as(count, "count")) { return false; }
 		if (!args.next_as(step, "step")) { return false; }
 		if (!args.next_as(imageSize, "imageSize")) { return false; }
-		assert(imageSize > 0 && imageSize < 16);
+		assert(imageSize > 0 && imageSize <= 16);
 		if (!args.args.empty()) {
 			std::cerr << std::format("unrecognized argument: '{}'\n", args.next());
 			return false;
@@ -162,28 +162,19 @@ class HistogramBitmap {
 	void writeImage() {
 		std::vector<float> interpolatedHeight;
 		interpolatedHeight.resize(imageSize);
-		float stepSizeOfBaseGraph = static_cast<float>(imageSize) / static_cast<float>(heightValues.size() - 1);
+		float stepSizeOfBaseData = static_cast<float>(imageSize) / static_cast<float>(heightValues.size() - 1);
 
 		std::ofstream outFile{"histogram.bmp", std::ios::binary};
 
-#if false
-		//leaving this for future cubic interpolation
-		//i need to learn more about it
-
-		for(int i = 1; i < imageSize - 1; i++) {
-			interpolatedHeight[i] = cubicInterpolation();
-		}	
-	
-#else
 		interpolatedHeight[0] = heightValues[0];
 		interpolatedHeight.back() = heightValues.back();
 
 		for(uint16_t i = 1; i < imageSize - 1; i++) {
-			float exactPoint = static_cast<float>(i) / stepSizeOfBaseGraph;
-			uint16_t lastPoint = static_cast<uint16_t>(std::floor(exactPoint));
-			uint16_t nextPoint = static_cast<uint16_t>(std::ceil(exactPoint));
-			float weighting = exactPoint - (float)lastPoint;
-			interpolatedHeight.at(i) = std::lerp(heightValues.at(lastPoint), heightValues.at(nextPoint), weighting);
+
+			float exactPoint = static_cast<float>(i) / stepSizeOfBaseData;
+			float flooredValue = std::floor(exactPoint);
+
+			interpolatedHeight.at(i) = heightValues.at(static_cast<uint16_t>(flooredValue) + (exactPoint >= 0.5f));
 		}
 
 		writeBitmapFileHeader(imageSize, outFile);
@@ -197,8 +188,6 @@ class HistogramBitmap {
 				}
 			}
 		}
-
-#endif
 		outFile.close();
 	}
 

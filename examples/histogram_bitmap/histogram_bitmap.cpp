@@ -34,7 +34,7 @@ constexpr int32_t MAX_RESOLUTION_FACTOR = 16;
 		uint32_t important_colors = 0; //not used
 
 		explicit Bmp_Header(uint16_t image_size) : width{image_size}, height{image_size} {
-			size_of_bmp_file += width * height * 3; //rgb, 1 byte per color
+			size_of_bmp_file += static_cast<uint32_t>(width * height) * 3; //rgb, 1 byte per color
 		}
 		void write_to_file(std::ofstream& out_file) const {
 			//writing like this to avoid padding issues

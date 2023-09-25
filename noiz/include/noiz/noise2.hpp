@@ -24,6 +24,20 @@ class Noise2 {
 		return detail::interpolate(point, dots);
 	}
 
+	[[nodiscard]] auto at_with_octave(Vec2<Type> const& point, int const& octaves, Type const& persistence, Type const& lacunarity) const -> Type {
+		Type total = Type(0);
+		Type frequency = (Type)2;
+		Type amplitude = (Type)1;
+		Type normalizer = (Type)0;
+		for(int i = 0; i < octaves; i++){
+			total += at(Vec2<Type>{.x = point.x * frequency, .y = point.y * frequency}) * amplitude;
+			normalizer += amplitude;
+			amplitude *= persistence;
+			frequency *= lacunarity;
+		}
+		return total/normalizer;
+	}
+
   private:
 	detail::Grid2<Type> m_grid{};
 };

@@ -39,6 +39,13 @@ struct Vec2 {
 
 	[[nodiscard]] constexpr auto fract() const -> Vec2<Type> { return Vec2<Type>{.x = x - std::floor(x), .y = y - std::floor(y)}; }
 
+	[[nodiscard]] constexpr auto fade() const -> Vec2<Type> {
+		return Vec2<Type>{
+			.x = x * x * x * (x * (x * 6 - 15) + 10),
+			.y = y * y * y * (y * (y * 6 - 15) + 10)
+		};
+	}
+
 	constexpr auto operator+=(Vec2 const rhs) -> Vec2& {
 		x += rhs.x;
 		y += rhs.y;

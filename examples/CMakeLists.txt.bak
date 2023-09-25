@@ -1,6 +1,3 @@
 add_subdirectory(histogram)
-<<<<<<< Updated upstream
-=======
-add_subdirectory(histogram_bitmap)
 add_subdirectory(texture2d)
->>>>>>> Stashed changes
+add_subdirectory(texture2d_perlin_noise2)

@@ -1,6 +1,5 @@
 #pragma once
 #include <random>
-#include <algorithm>
 #include "../seed.hpp"
 #include "../vec2.hpp"
 

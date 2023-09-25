@@ -5,6 +5,7 @@ out/*
 screenshots
 .cache
 .DS_Store
+*.bank
 
 CMakeSettings.json
 compile_commands.json

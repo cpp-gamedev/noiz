@@ -8,5 +8,5 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 )
 
 target_sources(${PROJECT_NAME} PRIVATE
-  texture2d_perlin.cpp
+  texture2d.cpp
 )

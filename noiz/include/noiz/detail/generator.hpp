@@ -1,5 +1,6 @@
 #pragma once
 #include <random>
+#include <algorithm>
 #include "../seed.hpp"
 #include "../vec2.hpp"
 
@@ -45,6 +46,10 @@ class Generator {
 		auto ret = Vec2<Type>{};
 		next(ret);
 		return ret;
+	}
+
+	std::default_random_engine& get_m_engine() {
+		return m_engine;
 	}
 
   private:

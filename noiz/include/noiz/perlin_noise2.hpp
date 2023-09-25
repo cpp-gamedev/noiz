@@ -24,12 +24,16 @@ namespace noiz {
         explicit PerlinNoise2(Seed generator_seed) {
             pNumbers.resize(DEFAULT_SAMPLE_COUNT);
 
+            detail::Generator generator(generator_seed);
+
+
             //fill perms with values from 0 to 255
             //never used iota before, need to research this
             std::iota(pNumbers.begin(), pNumbers.end(), 0);
 
             //shuffle values, i dont quite understand what this means beyond the shuffle itself yet
-            std::shuffle(pNumbers.begin(), pNumbers.end(), generator_seed);
+            std::shuffle(pNumbers.begin(), pNumbers.end(), generator.get_m_engine());
+            
 
             //duplicate permutations
             //is this a memcpy from p.begin() to p.end()??
@@ -53,11 +57,11 @@ namespace noiz {
             const Type v = fade(y);                                     // FOR EACH OF X,Y,Z.
 
             //int A = p[X] + Y;
-            int AA = pNumbers[(pNumbers[X] + Y) % 256];
-            int AB = pNumbers[(pNumbers[X] + Y + 1) % 256];      // HASH COORDINATES OF
+            int AA = pNumbers[pNumbers[X] + Y];
+            int AB = pNumbers[pNumbers[X] + Y + 1];      // HASH COORDINATES OF
             //int B = p[X+1]+Y;
-            int BA = pNumbers[(pNumbers[X+1]+Y) % 256];
-            int BB = pNumbers[(pNumbers[X+1]+Y + 1) % 256];      // THE 8 CUBE CORNERS,
+            int BA = pNumbers[pNumbers[X+1]+Y];
+            int BB = pNumbers[pNumbers[X+1]+Y + 1];      // THE 8 CUBE CORNERS,
 
             static constexpr Type unit = (Type)1;
 

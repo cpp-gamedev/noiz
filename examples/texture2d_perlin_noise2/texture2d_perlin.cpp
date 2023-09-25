@@ -97,26 +97,26 @@ class Texture_2D {
 
 		void build_and_write_image_noise(noiz::PerlinNoise2f& noise, float const& step) {
 
-			std::ofstream out_file{"noise.bmp", std::ios::binary};
+			std::ofstream out_file{"noisePerlin2.bmp", std::ios::binary};
 			Bmp_Header::write_bmp_file_header(image_size, out_file);
-			//uint8_t grayscale_color; //0 is black, 255 is white
+			uint8_t grayscale_color; //0 is black, 255 is white
 			for (int y = 0; y < image_size; y++) {
 				for(int x = 0; x < image_size; x++) {
 				// add noise at point
-					//float adjusted_noise = noise.at(noiz::Vec2f{.x = static_cast<float>(x) * step, .y = static_cast<float>(y) * step});
-					std::cout << noise.at(noiz::Vec2f{.x = static_cast<float>(x) * step, .y = static_cast<float>(y) * step}) << std::endl;
-					//adjusted_noise = (adjusted_noise + 1.f) * 0.5f;
-					//grayscale_color = static_cast<uint8_t>((adjusted_noise) * 255.f);
+					float adjusted_noise = noise.at(noiz::Vec2f{.x = static_cast<float>(x) * step, .y = static_cast<float>(y) * step});
+					//std::cout << noise.at(noiz::Vec2f{.x = static_cast<float>(x) * step, .y = static_cast<float>(y) * step}) << std::endl;
+					adjusted_noise = (adjusted_noise + 1.f) * 0.5f;
+					grayscale_color = static_cast<uint8_t>((adjusted_noise) * 255.f);
 					/*
 					 * might be better do this
 					char adjusted_noise = static_cast<char>(noise.at(noiz::Vec2f{.x = static_cast<float>(x) * step, .y = static_cast<float>(y) * step}) * 127.f);
 					out_file.write(&adjusted_noise, 1);
 					*/
-					//for(int i = 0; i < 3; i++) { 
+					for(int i = 0; i < 3; i++) { 
 						//bmp cant do 1 channel, needs all 3 channels. unfortunately that means writing the color 3 times.
 						//id like to use png, but I think including a lib for an example is kinda rough.
-					//	out_file.write((char*)&grayscale_color, sizeof(char)); //sizeof(char) == 1
-					//}
+						out_file.write((char*)&grayscale_color, sizeof(char)); //sizeof(char) == 1
+					}
 				}
 			}
 			out_file.close();

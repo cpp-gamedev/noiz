@@ -40,6 +40,20 @@ struct Vec2 {
 	[[nodiscard]] constexpr auto fract() const -> Vec2<Type> { return Vec2<Type>{.x = x - std::floor(x), .y = y - std::floor(y)}; }
 
 	[[nodiscard]] constexpr auto fade() const -> Vec2<Type> {
+		/* explanation from chatgpt
+		The function calculates a smooth transition using a polynomial expression. 
+		Here's the breakdown of the expression:
+
+    	t * t * t: This part cubically interpolates t. 
+		Cubic interpolation ensures a smooth transition from 0 to 1, 
+		where the rate of change is slower at the beginning and end of the interval.
+
+    	(t * (t * 6 - 15) + 10): 
+		This part further manipulates the cubic interpolation to achieve a smooth fade effect. 
+		The expression (t * 6 - 15) stretches the t values so that they cover a wider range. 
+		The + 10 shifts the range so that it starts from 0 and ends at 1.
+		*/
+
 		return Vec2<Type>{
 			.x = x * x * x * (x * (x * 6 - 15) + 10),
 			.y = y * y * y * (y * (y * 6 - 15) + 10)

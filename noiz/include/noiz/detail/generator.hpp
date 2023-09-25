@@ -48,10 +48,6 @@ class Generator {
 		return ret;
 	}
 
-	std::default_random_engine& get_m_engine() {
-		return m_engine;
-	}
-
   private:
 	std::default_random_engine m_engine{};
 };

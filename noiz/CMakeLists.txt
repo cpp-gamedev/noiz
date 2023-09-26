@@ -10,6 +10,7 @@ target_sources(${PROJECT_NAME} PUBLIC FILE_SET HEADERS BASE_DIRS include FILES
 
   include/noiz/cell2.hpp
   include/noiz/index2.hpp
+  include/noiz/noise-processing2.hpp
   include/noiz/noise2.hpp
   include/noiz/seed.hpp
   include/noiz/vec2.hpp

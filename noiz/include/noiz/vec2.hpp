@@ -20,8 +20,8 @@ struct Vec2 {
 	void normalize() {
 		auto const mag = magnitude();
 		assert(mag > Type(0));
-		x /= mag;
-		y /= mag;
+
+		*this = *this / mag;
 	}
 
 	[[nodiscard]] auto normalized() const -> Vec2 {
@@ -69,6 +69,22 @@ struct Vec2 {
 		y /= rhs.y;
 		return *this;
 	}
+
+	//could use type instead of doing float and double, but it would restrict the multiplier to be of the same type?
+	//not sure if it matters
+	constexpr auto operator*(float const factor) -> Vec2 {
+		return Vec2<Type>{x * static_cast<Type>(factor), y * static_cast<Type>(factor)};
+	}
+		constexpr auto operator*(double const factor) -> Vec2 {
+		return Vec2<Type>{x * static_cast<Type>(factor), y * static_cast<Type>(factor)};
+	}
+	constexpr auto operator/(float const divisor) -> Vec2 {
+		return Vec2<Type>{x / static_cast<Type>(divisor), y / static_cast<Type>(divisor)};
+	}
+		constexpr auto operator/(double const divisor) -> Vec2 {
+		return Vec2<Type>{x / static_cast<Type>(divisor), y / static_cast<Type>(divisor)};
+	}
+
 
 	friend constexpr auto operator+(Vec2 lhs, Vec2 const rhs) -> Vec2 { return lhs += rhs; }
 	friend constexpr auto operator-(Vec2 lhs, Vec2 const rhs) -> Vec2 { return lhs -= rhs; }

@@ -1,4 +1,4 @@
-#include <noiz/noise2.hpp>
+#include <noiz2/noise2.hpp>
 
 #include <argument_parsing.hpp>
 

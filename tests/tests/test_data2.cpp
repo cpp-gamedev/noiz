@@ -1,4 +1,4 @@
-#include <noiz/detail/data2.hpp>
+#include <noiz2/detail/data2.hpp>
 #include <test/test.hpp>
 
 namespace {

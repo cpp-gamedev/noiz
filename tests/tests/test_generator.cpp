@@ -1,4 +1,4 @@
-#include <noiz/detail/generator.hpp>
+#include <generator.hpp>
 #include <test/test.hpp>
 
 namespace {

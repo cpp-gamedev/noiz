@@ -28,6 +28,6 @@ class Noise3 {
 	detail::Grid3<Type> m_grid{};
 };
 
-using Noise2f = Noise3<float>;
-using Noise2d = Noise3<double>;
+using Noise3f = Noise3<float>;
+using Noise3d = Noise3<double>;
 } // namespace noiz

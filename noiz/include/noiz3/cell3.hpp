@@ -16,6 +16,7 @@ struct TCell3 {
 	Type right_top_below{};
 	Type left_bottom_below{};
 	Type right_bottom_below{};
+	
 	Type left_top_above{};
 	Type right_top_above{};
 	Type left_bottom_above{};

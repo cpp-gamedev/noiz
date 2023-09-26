@@ -12,7 +12,7 @@ auto make_populated_grid(Index3 const grid_extent, Seed seed = Generator::make_r
 }
 
 template <std::floating_point Type>
-constexpr auto compute_offsets(CornerCell3<Type> const& corner, Vec2<Type> const point) -> Cell3<Type> {
+constexpr auto compute_offsets(CornerCell3<Type> const& corner, Vec3<Type> const point) -> Cell3<Type> {
 	return Cell3<Type>{
 		.left_top_below = point - corner.left_top_below.location,
 		.right_top_below = point - corner.right_top_below.location,
@@ -33,10 +33,10 @@ constexpr auto compute_dot_products(CornerCell3<Type> const& corner, Cell3<Type>
 		.left_bottom_below = dot(corner.left_bottom_below.gradient, offset.left_bottom_below),
 		.right_bottom_below = dot(corner.right_bottom_below.gradient, offset.right_bottom_below),
 		
-		.left_top_above = dot(corner.left_top.gradient, offset.left_top_above),
-		.right_top_above = dot(corner.right_top.gradient, offset.right_top_above),
-		.left_bottom_above = dot(corner.left_bottom.gradient, offset.left_bottom_above),
-		.right_bottom_above = dot(corner.right_bottom.gradient, offset.right_bottom_above),
+		.left_top_above = dot(corner.left_top_above.gradient, offset.left_top_above),
+		.right_top_above = dot(corner.right_top_above.gradient, offset.right_top_above),
+		.left_bottom_above = dot(corner.left_bottom_above.gradient, offset.left_bottom_above),
+		.right_bottom_above = dot(corner.right_bottom_above.gradient, offset.right_bottom_above),
 	};
 }
 

@@ -1,5 +1,6 @@
 #pragma once
 #include <cassert>
+#include <cstdint>
 
 namespace noiz {
 struct Index3 {
@@ -12,8 +13,9 @@ struct Index3 {
 		return Index3{.x = x % extent.x, .y = y % extent.y, .z = z % extent.z};
 	}
 
-	//i dont know how to fix this
-	[[nodiscard]] constexpr auto flatten(Index3 const extent) const -> int { return y * (extent.x + 1) + x; }
+	[[nodiscard]] constexpr auto flatten(Index3 const extent) const -> int64_t { 
+		return z * ((extent.x + 1) * (extent.y + 1)) + y * (extent.x + 1) + x;
+	}
 };
 
 struct CellIndex3 {
@@ -21,6 +23,7 @@ struct CellIndex3 {
 	std::size_t rtb{};
 	std::size_t lbb{};
 	std::size_t rbb{};
+
 	std::size_t lta{};
 	std::size_t rta{};
 	std::size_t lba{};
@@ -35,12 +38,11 @@ struct CellIndex3 {
 		ret.rtb = ret.ltb + 1;
 		ret.lbb = ret.ltb + static_cast<std::size_t>(grid_extent.x + 1);
 		ret.rbb = ret.rtb + static_cast<std::size_t>(grid_extent.x + 1);
-		/* idk how to implement this
-		ret.lta =
-		ret.rta =
-		ret.lba =
-		ret.lba =
-		*/
+
+		ret.lta = ret.ltb + static_cast<std::size_t>((grid_extent.x + 1) * (grid_extent.y + 1));
+		ret.rta = ret.rtb + static_cast<std::size_t>((grid_extent.x + 1) * (grid_extent.y + 1));
+		ret.lba = ret.lbb + static_cast<std::size_t>((grid_extent.x + 1) * (grid_extent.y + 1));
+		ret.rba = ret.rbb + static_cast<std::size_t>((grid_extent.x + 1) * (grid_extent.y + 1));
 		return ret;
 	}
 };

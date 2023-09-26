@@ -76,26 +76,12 @@ struct Vec3 {
 		return *this;
 	}
 
-	//could use type instead of doing float and double, but it would restrict the multiplier to be of the same type?
-	//not sure if it matters
-	constexpr auto operator*(float const factor) -> Vec3 {
-		return Vec3<Type>{x * static_cast<Type>(factor), y * static_cast<Type>(factor), z * static_cast<Type>(factor)};
-	}
-		constexpr auto operator*(double const factor) -> Vec3 {
-		return Vec3<Type>{x * static_cast<Type>(factor), y * static_cast<Type>(factor), z * static_cast<Type>(factor)};
-	}
-	constexpr auto operator/(float const divisor) -> Vec3 {
-		return Vec3<Type>{x / static_cast<Type>(divisor), y / static_cast<Type>(divisor), z / static_cast<Type>(divisor)};
-	}
-		constexpr auto operator/(double const divisor) -> Vec3 {
-		return Vec3<Type>{x / static_cast<Type>(divisor), y / static_cast<Type>(divisor), z / static_cast<Type>(divisor)};
-	}
-
-
 	friend constexpr auto operator+(Vec3 lhs, Vec3 const rhs) -> Vec3 { return lhs += rhs; }
 	friend constexpr auto operator-(Vec3 lhs, Vec3 const rhs) -> Vec3 { return lhs -= rhs; }
 	friend constexpr auto operator*(Vec3 lhs, Vec3 const rhs) -> Vec3 { return lhs *= rhs; }
 	friend constexpr auto operator/(Vec3 lhs, Vec3 const rhs) -> Vec3 { return lhs /= rhs; }
+	friend constexpr auto operator*(Vec3 lhs, Type const factor) -> Vec3 {return Vec3{.x = lhs.x * factor, .y = lhs.y * factor, .z = lhs.z * factor};}
+	friend constexpr auto operator/(Vec3 lhs, Type const divisor) -> Vec3 {return Vec3{.x = lhs.x / divisor, .y = lhs.y / divisor, .z = lhs.z / divisor};}
 
 	auto operator==(Vec3 const&) const -> bool = default;
 };

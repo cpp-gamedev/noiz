@@ -1,20 +1,22 @@
 #pragma once
 #include "noise3.hpp"
 
+
 namespace noiz{
 //static functions, maybe make members of noise2? not really sure
 template <std::floating_point Type>
 class Noise_Processor3 {
 public:
-
+	explicit Noise_Processor3(noiz::Noise3<Type>& noise) : noise{noise}{}
 	//if this is multi-threaded, accessing these variables directly could lead to strange behavior
 	//i.e. a handful of threads processing noise, then another comes in and changes octave??
 	//not sure if thats a use case worth covering?
+	noiz::Noise3<Type>& noise;
 
 	//default values
 	uint8_t octave{ 6 };
 	Type step = (Type)0.1;
-	Type persistance = (Type)1.5;
+	Type persistence = (Type)1.5;
 	Type lacunarity = (Type)2.0;
 	Type frequency = (Type)1.0;
 	Type amplitude = (Type)1.0;
@@ -24,21 +26,19 @@ public:
 	Type hbf_offset = (Type)0.7;
 	std::vector<Type> hbf_exponent_array;
 
-	//could construct an object of noiz::noise2 here and it would simplify these functions a little bit.
-
-	auto raw_noise(noiz::Vec3<Type> const& point, Noise3<Type> const& noise) -> Type{
+	auto raw_noise(noiz::Vec3<Type> const& point) -> Type{
 		//redundant
-		return noise->at(point * step);
+		return noise.at(point * step);
 	}
 
-	auto basic_processing(noiz::Vec3<Type> const& point, Noise3<Type> const& noise) -> Type {
+	auto basic_processing(noiz::Vec3<Type> const& point) -> Type {
 		
 		Type total = Type(0);
 		Type frequency = (Type)2;
 		Type amplitude = (Type)1;
 		Type normalizer = (Type)0;
-		for(int i = 0; i < octaves; i++){
-			total += at(point * frequency]) * amplitude;
+		for(int i = 0; i < octave; i++){
+			total += noise.at(point * frequency) * amplitude;
 			normalizer += amplitude;
 			amplitude *= persistence;
 			frequency *= lacunarity;
@@ -46,16 +46,16 @@ public:
 		return total/normalizer;
 	}
 
-	auto turbulence_processing(noiz::Vec3<Type> const& point, Noise3<Type> const& noise) -> Type {
+	auto turbulence_processing(noiz::Vec3<Type> const& point) -> Type {
 		Type amplitude = this->amplitude;
 		Type frequency = this->frequency;
 		
 			Type sum = 0.f;
 			Type normalizer = 0.f;
 			for (int i = 0; i < octave; i++) {
-				sum += noise.at(noiz::Vec3<Type>{.x = point.x * frequency, .y = point.y * frequency}) * amplitude;
+				sum += noise.at(point * frequency) * amplitude;
 				normalizer += amplitude;
-				amplitude *= persistance;
+				amplitude *= persistence;
 				frequency *= lacunarity;
 			}
 			//normally return sum;
@@ -63,26 +63,25 @@ public:
 			return sum;
 	}
 
-	auto billowy_processing(noiz::Vec3<Type> const& point, Noise3<Type> const& noise) -> Type {
+	auto billowy_processing(noiz::Vec3<Type> const& point) -> Type {
 		return abs(noise.at(point));
 	}
 
-	auto rigid_processing(noiz::Vec3<Type> const& point, Noise3<Type> const& noise) -> Type {
-		return 1.f - std::abs(noise.at(point);
+	auto rigid_processing(noiz::Vec3<Type> const& point) -> Type {
+		return 1.f - std::abs(noise.at(point));
 	}
 
-	auto hybrid_multi_fractal_processing(noiz::Vec3<Type> const& point, Noise3<Type> const& noise) -> Type {
+	auto hybrid_multi_fractal_processing(noiz::Vec3<Type> const& point) -> Type {
 		//https://www.classes.cs.uchicago.edu/archive/2015/fall/23700-1/final-project/MusgraveTerrain00.pdf
 		
 		//this function assumes the octave could be a decimal value
-		//i also casted it down from 3d to 2d, im not sure what effects this has. hard to say without 3d rendering
 		
 		//double HybridMultifractal( Vector point, double H, double lacunarity,
 		//double octaves, double offset )
 		noiz::Vec3<Type> tempPoint = point;
 
 		Type frequency, result, signal, weight, remainder;
-		//double Noise3(); what is this??
+
 		/* precompute and store spectral weights */
 		if (hbf_exponent_array.size() != octave) {
 			hbf_exponent_array.resize(octave);
@@ -103,7 +102,7 @@ public:
 		/* spectral construction inner loop, where the fractal is built */
 		for (int i = 1; i < octave; i++) {
 			/* prevent divergence */
-			if (weight > 1.0) weight = 1.0;
+			if (weight > 1.0) {weight = 1.0;}
 			/* get next higher frequency */
 			signal = (noise.at(tempPoint) + hbf_offset) * hbf_exponent_array[i];
 			/* add it in, weighted by previous freq's local value */
@@ -113,29 +112,18 @@ public:
 			weight *= signal;
 			/* increase frequency */
 			tempPoint = tempPoint * lacunarity;
-		} /* for */
-		/* take care of remainder in “octaves” */
+		}
 		
 		/* octave is currently an int, may swap for this
+		/* take care of remainder in “octaves”
 		remainder = octave - (int)octave;
 		if (remainder)
 			// “i” and spatial freq. are preset in loop above
 			result += remainder * noise.at(point) * hbf_exponent_array[octave - 1];
 		*/
 
-	/* value checking
-		static Type biggestValue = (Type)0;
-		static Type smallestValue = (Type)1;
-		if (result > biggestValue) {
-			biggestValue = result;
-			std::cout << "biggest result : " << result << std::endl;
-		}
-		else if (result < smallestValue) {
-			smallestValue = result;
-			std::cout << "smallest result : " << result << std::endl;
-		}
-	*/
-
+	
+		//values from 0 to ~4 can be expected. highest value ive seen is 3.7
 		return result;
 	}
 

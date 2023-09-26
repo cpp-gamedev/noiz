@@ -1,4 +1,5 @@
 #include <noiz3/noise3.hpp>
+#include <noiz3/noise-processing3.hpp>
 
 #include <argument_parsing.hpp>
 
@@ -10,14 +11,8 @@
 #include <vector>
 #include <fstream>
 
-constexpr int32_t constant_base_resolution = 256;
-constexpr int32_t constant_max_resolution_factor = 16;
-
-void write_ppm_file_header(std::ofstream& out_file, uint16_t image_size){
-	out_file << "P6" << std::endl;
-	out_file << image_size << " " << image_size << std::endl;
-	out_file << 255 << std::endl; //255 is max color value, 8 bits
-}
+constexpr int32_t constant_base_resolution = 128;
+constexpr int32_t constant_max_resolution_factor = 32;
 
 struct Config {
 	noiz::Seed seed{noiz::detail::Generator::make_random_seed()};
@@ -36,7 +31,7 @@ struct Config {
 		if (!args.args.empty()) {
 			return false;
 		}
-        const float scaled_resolution = constant_base_resolution * image_size_factor;
+        const int scaled_resolution = constant_base_resolution * image_size_factor;
 		grid_extent.x = scaled_resolution;
 		grid_extent.y = scaled_resolution;
 		grid_extent.z = scaled_resolution;
@@ -56,19 +51,44 @@ class Point_Cloud {
             float vertex_z;
             float vertex_y;
 
+            noiz::Noise_Processor3<float> noise_processor{noise};
+
+#if 1 //internal testing
+
+            noiz::Vec3f testing_point;
+            noise_processor.basic_processing(testing_point);
+            noise_processor.billowy_processing(testing_point);
+            noise_processor.hybrid_multi_fractal_processing(testing_point);
+            noise_processor.rigid_processing(testing_point);
+            noise_processor.turbulence_processing(testing_point);
+            noise_processor.raw_noise(testing_point);
+#endif
+
             for(int z = 0; z < image_size; z++){
-                vertex_z = (static_cast<float>(z) / image_size) - 0.5f;
+                vertex_z = (static_cast<float>(z) / static_cast<float>(image_size)) - 0.5f;
 
                 for (int y = 0; y < image_size; y++) {
-                vertex_y = (static_cast<float>(y) / image_size) - 0.5f;
+                vertex_y = (static_cast<float>(y) / static_cast<float>(image_size)) - 0.5f;
                     for(int x = 0; x < image_size; x++) {
                     // add noise at point
-                        const float noise_value = noise.at(noiz::Vec3f{.x = static_cast<float>(x) * step, .y = static_cast<float>(y) * step});
-                        if(noise_value > 0.5f){ //this should render a quarter of the points
+                        //raw noise
+#if 0 //raw noise
+                        const float noise_value = noise.at(noiz::Vec3f{.x = static_cast<float>(x) * step, .y = static_cast<float>(y) * step, .z = static_cast<float>(z) * step});
+                        if(noise_value > 0.0f){ //this should render a half of the points with raw noise
 
                             //no point in assigning x here? just write it directly to
-                            out_file << "v " << (static_cast<float>(x) / image_size - 0.5f) << " " << vertex_y << " " << vertex_z << '\n';
+                            out_file << "v " << ((static_cast<float>(x) / static_cast<float>(image_size)) - 0.5f) << " " << vertex_y << " " << vertex_z << '\n';
                         } 
+#else
+                        const float noise_value = noise_processor.hybrid_multi_fractal_processing(
+                                noiz::Vec3f{.x = static_cast<float>(x) * step, .y = static_cast<float>(y) * step, .z = static_cast<float>(z) * step}
+                            );
+                        if(noise_value > 2.0f){ //this should render a half of the points with hmf noise
+
+                            //no point in assigning x here? just write it directly to
+                            out_file << "v " << ((static_cast<float>(x) / static_cast<float>(image_size)) - 0.5f) << " " << vertex_y << " " << vertex_z << '\n';
+                        } 
+#endif
                     }
                 }
             }
@@ -88,7 +108,7 @@ auto main(int argc, char** argv) -> int {
 	// handle --help
 	if (!args.args.empty() && args.args.front() == std::string_view{"--help"}) {
 		std::cout << std::format("Usage: {} [step(=0.1)] [image_size_factor(=1)]\n", std::filesystem::path{*argv}.stem().string());
-		std::cout << "\t output image resolution is 256x256, with each dimension multiplied by image_size_factor, maximum scaling factor is 16[image size of 4096]" << std::endl;
+		std::cout << "\t output image resolution is 128x128, with each dimension multiplied by image_size_factor, maximum scaling factor is 32[image size of 4096]" << std::endl;
 		return EXIT_SUCCESS;
 	}
 

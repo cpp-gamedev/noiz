@@ -6,10 +6,11 @@ namespace noiz{
 template <std::floating_point Type>
 class Noise_Processor2 {
 public:
-
+	explicit Noise_Processor3(noiz::Noise2<Type>& noise) : noise{noise}{}
 	//if this is multi-threaded, accessing these variables directly could lead to strange behavior
 	//i.e. a handful of threads processing noise, then another comes in and changes octave??
 	//not sure if thats a use case worth covering?
+	noiz::Noise2<Type>& noise;
 
 	//default values
 	uint8_t octave{ 6 };
@@ -26,19 +27,19 @@ public:
 
 	//could construct an object of noiz::noise2 here and it would simplify these functions a little bit.
 
-	auto raw_noise(noiz::Vec2<Type> const& point, Noise2<Type> const& noise) -> Type{
+	auto raw_noise(noiz::Vec2<Type> const& point) -> Type{
 		//redundant
 		return noise->at(point * step);
 	}
 
-	auto basic_processing(noiz::Vec2<Type> const& point, Noise2<Type> const& noise) -> Type {
+	auto basic_processing(noiz::Vec2<Type> const& point) -> Type {
 		
 		Type total = Type(0);
 		Type frequency = (Type)2;
 		Type amplitude = (Type)1;
 		Type normalizer = (Type)0;
 		for(int i = 0; i < octaves; i++){
-			total += at(point * frequency]) * amplitude;
+			total += noise.at(point * frequency]) * amplitude;
 			normalizer += amplitude;
 			amplitude *= persistence;
 			frequency *= lacunarity;
@@ -46,7 +47,7 @@ public:
 		return total/normalizer;
 	}
 
-	auto turbulence_processing(noiz::Vec2<Type> const& point, Noise2<Type> const& noise) -> Type {
+	auto turbulence_processing(noiz::Vec2<Type> const& point) -> Type {
 		Type amplitude = this->amplitude;
 		Type frequency = this->frequency;
 		
@@ -63,15 +64,15 @@ public:
 			return sum;
 	}
 
-	auto billowy_processing(noiz::Vec2<Type> const& point, Noise2<Type> const& noise) -> Type {
+	auto billowy_processing(noiz::Vec2<Type> const& point) -> Type {
 		return abs(noise.at(point));
 	}
 
-	auto rigid_processing(noiz::Vec2<Type> const& point, Noise2<Type> const& noise) -> Type {
+	auto rigid_processing(noiz::Vec2<Type> const& point) -> Type {
 		return 1.f - std::abs(noise.at(point);
 	}
 
-	auto hybrid_multi_fractal_processing(noiz::Vec2<Type> const& point, Noise2<Type> const& noise) -> Type {
+	auto hybrid_multi_fractal_processing(noiz::Vec2<Type> const& point) -> Type {
 		//https://www.classes.cs.uchicago.edu/archive/2015/fall/23700-1/final-project/MusgraveTerrain00.pdf
 		
 		//this function assumes the octave could be a decimal value

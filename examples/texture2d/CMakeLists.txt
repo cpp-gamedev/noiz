@@ -10,3 +10,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 target_sources(${PROJECT_NAME} PRIVATE
   texture2d.cpp
 )
+
+target_include_directories(${PROJECT_NAME} PRIVATE
+  ../common
+)

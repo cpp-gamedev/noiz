@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../argument_parsing.hpp"
+#include <argument_parsing.hpp>
 
 namespace {
 

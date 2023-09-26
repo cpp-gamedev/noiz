@@ -1,6 +1,6 @@
 #include <noiz/noise2.hpp>
 
-#include "../argument_parsing.hpp"
+#include <argument_parsing.hpp>
 
 
 #include <charconv>

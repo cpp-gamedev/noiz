@@ -6,7 +6,7 @@ namespace noiz{
 template <std::floating_point Type>
 class Noise_Processor2 {
 public:
-	explicit Noise_Processor3(noiz::Noise2<Type>& noise) : noise{noise}{}
+	explicit Noise_Processor2(noiz::Noise2<Type>& noise) : noise{noise}{}
 	//if this is multi-threaded, accessing these variables directly could lead to strange behavior
 	//i.e. a handful of threads processing noise, then another comes in and changes octave??
 	//not sure if thats a use case worth covering?
@@ -15,7 +15,7 @@ public:
 	//default values
 	uint8_t octave{ 6 };
 	Type step = (Type)0.1;
-	Type persistance = (Type)1.5;
+	Type persistence = (Type)1.5;
 	Type lacunarity = (Type)2.0;
 	Type frequency = (Type)1.0;
 	Type amplitude = (Type)1.0;
@@ -29,7 +29,7 @@ public:
 
 	auto raw_noise(noiz::Vec2<Type> const& point) -> Type{
 		//redundant
-		return noise->at(point * step);
+		return noise.at(point * step);
 	}
 
 	auto basic_processing(noiz::Vec2<Type> const& point) -> Type {
@@ -38,8 +38,8 @@ public:
 		Type frequency = (Type)2;
 		Type amplitude = (Type)1;
 		Type normalizer = (Type)0;
-		for(int i = 0; i < octaves; i++){
-			total += noise.at(point * frequency]) * amplitude;
+		for(int i = 0; i < octave; i++){
+			total += noise.at(point * frequency) * amplitude;
 			normalizer += amplitude;
 			amplitude *= persistence;
 			frequency *= lacunarity;
@@ -56,7 +56,7 @@ public:
 			for (int i = 0; i < octave; i++) {
 				sum += noise.at(noiz::Vec2<Type>{.x = point.x * frequency, .y = point.y * frequency}) * amplitude;
 				normalizer += amplitude;
-				amplitude *= persistance;
+				amplitude *= persistence;
 				frequency *= lacunarity;
 			}
 			//normally return sum;
@@ -69,7 +69,7 @@ public:
 	}
 
 	auto rigid_processing(noiz::Vec2<Type> const& point) -> Type {
-		return 1.f - std::abs(noise.at(point);
+		return 1.f - std::abs(noise.at(point));
 	}
 
 	auto hybrid_multi_fractal_processing(noiz::Vec2<Type> const& point) -> Type {

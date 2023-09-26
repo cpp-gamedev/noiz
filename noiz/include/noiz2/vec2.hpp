@@ -77,8 +77,8 @@ struct Vec2 {
 
 	//i think this forces the factor/divisor to be the same type as the vec, aka float==float, or double==double,
 	//wont allow float*double? not really sure
-	friend constexpr auto operator*(Vec2 lhs, Type const factor) -> Vec3 {return Vec3{.x = lhs.x * factor, .y = lhs.y * factor};}
-	friend constexpr auto operator/(Vec2 lhs, Type const divisor) -> Vec3 {return Vec3{.x = lhs.x / divisor, .y = lhs.y / divisor};}
+	friend constexpr auto operator*(Vec2 lhs, Type const factor) -> Vec2 {return Vec2{.x = lhs.x * factor, .y = lhs.y * factor};}
+	friend constexpr auto operator/(Vec2 lhs, Type const divisor) -> Vec2 {return Vec2{.x = lhs.x / divisor, .y = lhs.y / divisor};}
 
 	auto operator==(Vec2 const&) const -> bool = default;
 };

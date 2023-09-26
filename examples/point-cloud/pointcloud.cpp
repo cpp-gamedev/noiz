@@ -1,6 +1,10 @@
 #include <noiz3/noise3.hpp>
 #include <noiz3/noise-processing3.hpp>
 
+//if testing
+#include <noiz2/noise2.hpp>
+#include <noiz2/noise-processing2.hpp>
+
 #include <argument_parsing.hpp>
 
 
@@ -54,6 +58,8 @@ class Point_Cloud {
             noiz::Noise_Processor3<float> noise_processor{noise};
 
 #if 1 //internal testing
+            noiz::Noise2f noise2;
+            noiz::Noise_Processor2<float> noise_processor2{noise2};
 
             noiz::Vec3f testing_point;
             noise_processor.basic_processing(testing_point);
@@ -62,6 +68,14 @@ class Point_Cloud {
             noise_processor.rigid_processing(testing_point);
             noise_processor.turbulence_processing(testing_point);
             noise_processor.raw_noise(testing_point);
+
+            noiz::Vec2f testing_point2;
+            noise_processor2.basic_processing(testing_point2);
+            noise_processor2.billowy_processing(testing_point2);
+            noise_processor2.hybrid_multi_fractal_processing(testing_point2);
+            noise_processor2.rigid_processing(testing_point2);
+            noise_processor2.turbulence_processing(testing_point2);
+            noise_processor2.raw_noise(testing_point2);
 #endif
 
             for(int z = 0; z < image_size; z++){

@@ -100,7 +100,7 @@ public:
 		/* increase frequency */
 		tempPoint = tempPoint * lacunarity;
 		/* spectral construction inner loop, where the fractal is built */
-		for (int i = 1; i < octave; i++) {
+		for (uint16_t i = 1; i < octave; i++) {
 			/* prevent divergence */
 			if (weight > 1.0) {weight = 1.0;}
 			/* get next higher frequency */

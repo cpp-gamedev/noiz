@@ -89,7 +89,7 @@ public:
 			/* seize required memory for exponent_array */
 			//exponent_array = (double*)malloc(octave * sizeof(double));
 			frequency = 1.0;
-			for (int i = 0; i < octave; i++) {
+			for (uint16_t i = 0; i < octave; i++) {
 				/* compute weight for each frequency */
 				hbf_exponent_array[i] = std::pow(frequency, -hbf_H);
 				frequency *= lacunarity;

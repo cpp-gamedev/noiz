@@ -1,4 +1,4 @@
-project(noiz-histogram)
+project(noiz-texture2d)
 
 add_executable(${PROJECT_NAME})
 
@@ -8,7 +8,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 )
 
 target_sources(${PROJECT_NAME} PRIVATE
-  histogram.cpp
+  texture2d.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE

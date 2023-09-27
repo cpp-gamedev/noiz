@@ -33,7 +33,7 @@ constexpr auto compute_dot_products(CornerCell2<Type> const& corner, Cell2<Type>
 
 template <std::floating_point Type>
 constexpr auto interpolate(Vec2<Type> const point, TCell2<Type> const& dot_products) -> Type {
-	auto const uv = point.fract();
+	auto const uv = point.fract().fade(); 
 	auto const a = std::lerp(dot_products.left_top, dot_products.right_top, uv.x);
 	auto const b = std::lerp(dot_products.left_bottom, dot_products.right_bottom, uv.x);
 	return std::lerp(a, b, uv.y);

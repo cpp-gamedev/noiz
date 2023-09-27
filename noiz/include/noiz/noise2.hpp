@@ -17,9 +17,10 @@ class Noise2 {
 
 	[[nodiscard]] auto at(Vec2<Type> point) const -> Type {
 		point = point.modulo(detail::to_vec2<Type>(m_grid.grid_extent));
-		auto const corner = m_grid.at(detail::to_index2(point));
-		auto const offset = detail::compute_offsets(corner, point);
-		auto const dots = detail::compute_dot_products(corner, offset);
+		auto const corners = m_grid.at(detail::to_index2(point));
+		auto const offsets = detail::compute_offsets(corners, point);
+		auto const dots = detail::compute_dot_products(corners, offsets);
+		
 		return detail::interpolate(point, dots);
 	}
 

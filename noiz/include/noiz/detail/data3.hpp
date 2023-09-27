@@ -1,5 +1,5 @@
 #pragma once
-#include "../../generator.hpp"
+#include "generator.hpp"
 #include "grid3.hpp"
 
 namespace noiz::detail {

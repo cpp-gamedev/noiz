@@ -1,4 +1,4 @@
-#include <noiz2/detail/grid2.hpp>
+#include <noiz/detail/grid2.hpp>
 #include <test/test.hpp>
 
 namespace {

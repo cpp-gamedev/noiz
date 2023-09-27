@@ -1,9 +1,9 @@
-#include <noiz3/noise3.hpp>
-#include <noiz3/noise-processing3.hpp>
+#include <noiz/noise3.hpp>
+#include <noiz/noise-processing3.hpp>
 
 //if testing
-#include <noiz2/noise2.hpp>
-#include <noiz2/noise-processing2.hpp>
+#include <noiz/noise2.hpp>
+#include <noiz/noise-processing2.hpp>
 
 #include <argument_parsing.hpp>
 
@@ -57,7 +57,7 @@ class Point_Cloud {
 
             noiz::Noise_Processor3<float> noise_processor{noise};
 
-#if 1 //internal testing
+#if 0 //internal testing
             noiz::Noise2f noise2;
             noiz::Noise_Processor2<float> noise_processor2{noise2};
 
@@ -93,7 +93,7 @@ class Point_Cloud {
                             //no point in assigning x here? just write it directly to
                             out_file << "v " << ((static_cast<float>(x) / static_cast<float>(image_size)) - 0.5f) << " " << vertex_y << " " << vertex_z << '\n';
                         } 
-#else
+#else //hybrid multi fractal noise
                         const float noise_value = noise_processor.hybrid_multi_fractal_processing(
                                 noiz::Vec3f{.x = static_cast<float>(x) * step, .y = static_cast<float>(y) * step, .z = static_cast<float>(z) * step}
                             );

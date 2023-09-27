@@ -1,8 +1,8 @@
 #pragma once
 #include <random>
-#include "seed.hpp"
-#include "noiz2/vec2.hpp"
-#include "noiz3/vec3.hpp"
+#include "../seed.hpp"
+#include "../vec2.hpp"
+#include "../vec3.hpp"
 
 namespace noiz::detail {
 ///

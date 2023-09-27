@@ -1,4 +1,4 @@
-#include <noiz2/vec2.hpp>
+#include <noiz/vec2.hpp>
 #include <test/test.hpp>
 
 namespace {

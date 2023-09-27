@@ -1,10 +1,6 @@
 #include <noiz/noise3.hpp>
 #include <noiz/noise-processing3.hpp>
 
-//if testing
-#include <noiz/noise2.hpp>
-#include <noiz/noise-processing2.hpp>
-
 #include <argument_parsing.hpp>
 
 

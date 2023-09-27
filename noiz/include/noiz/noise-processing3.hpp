@@ -64,11 +64,11 @@ public:
 	}
 
 	auto billowy_processing(noiz::Vec3<Type> const& point) -> Type {
-		return std::abs(noise.at(point));
+		return std::abs(noise.at(point * step));
 	}
 
 	auto rigid_processing(noiz::Vec3<Type> const& point) -> Type {
-		return 1.f - std::abs(noise.at(point));
+		return 1.f - std::abs(noise.at(point * step));
 	}
 
 	auto hybrid_multi_fractal_processing(noiz::Vec3<Type> const& point) -> Type {
@@ -88,14 +88,14 @@ public:
 			/* seize required memory for exponent_array */
 			//exponent_array = (double*)malloc(octave * sizeof(double));
 			frequency = 1.0;
-			for (int i = 0; i < octave; i++) {
+			for (uint16_t i = 0; i < octave; i++) {
 				/* compute weight for each frequency */
 				hbf_exponent_array[i] = std::pow(frequency, -hbf_H);
 				frequency *= lacunarity;
 			}
 		}
 		/* get first octave of function */
-		result = (noise.at(tempPoint) + hbf_offset) * hbf_exponent_array[0];
+		result = (noise.at(tempPoint * step) + hbf_offset) * hbf_exponent_array[0];
 		weight = result;
 		/* increase frequency */
 		tempPoint = tempPoint * lacunarity;
@@ -104,7 +104,7 @@ public:
 			/* prevent divergence */
 			if (weight > 1.0) {weight = 1.0;}
 			/* get next higher frequency */
-			signal = (noise.at(tempPoint) + hbf_offset) * hbf_exponent_array[i];
+			signal = (noise.at(tempPoint * step) + hbf_offset) * hbf_exponent_array[i];
 			/* add it in, weighted by previous freq's local value */
 			result += weight * signal;
 			/* update the (monotonically decreasing) weighting value */

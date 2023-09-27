@@ -1,5 +1,5 @@
 #pragma once
-#include "noizN/detail/data.hpp"
+#include "detail/data.hpp"
 
 namespace noiz {
 using GridExtent = Index;

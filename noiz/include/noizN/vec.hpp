@@ -5,16 +5,24 @@
 #include <concepts>
 #include <cstdint>
 
+#include <vector>
+#include <numeric>
+#include <algorithm>
+#include <iterator>
+
 namespace noiz {
 template <std::floating_point Type>
-struct Vec3 {
+struct Vec {
 	static constexpr auto epsilon_v = Type(0.001);
+	std::vector<Type> components;
 
-	Type x{};
-	Type y{};
-	Type z{};
-
-	[[nodiscard]] constexpr auto sqr_magnitude() const -> Type { return x * x + y * y + z * z; }
+	[[nodiscard]] constexpr auto sqr_magnitude() const -> Type {
+		Type sqr_mag = (Type)0;
+		for(int i = 0; i < components.size(); i++){
+			sqr_mag += components[i] * components[i];
+		}
+		return sqr_mag;
+	}
 
 	[[nodiscard]] auto magnitude() const -> Type { return std::sqrt(sqr_magnitude()); }
 
@@ -25,7 +33,7 @@ struct Vec3 {
 		*this = *this / mag;
 	}
 
-	[[nodiscard]] auto normalized() const -> Vec3 {
+	[[nodiscard]] auto normalized() const -> Vec {
 		auto ret = *this;
 		ret.normalize();
 		return ret;
@@ -33,78 +41,143 @@ struct Vec3 {
 
 	[[nodiscard]] auto is_normalized() const -> bool { return std::abs(sqr_magnitude() - Type(1)) < epsilon_v; }
 
-	[[nodiscard]] auto modulo(Vec3<Type> const extent) const -> Vec3<Type> {
+	[[nodiscard]] auto modulo(Vec<Type> const extent) const -> Vec<Type> {
 		assert(extent.x > Type(0) && extent.y > Type(0));
-		return Vec3<Type>{.x = std::fmod(x, extent.x), .y = std::fmod(y, extent.y), .z = std::fmod(z, extent.z)};
+		Vec<Type> returnVec;
+		returnVec.components.resize(components.size(), (Type)0);
+		for(int i = 0; i < components.size(); i++){
+			assert(extent.components[i] > (Type)0);
+			returnVec[i] = std::fmod(components[i], extent.components[i]);
+		}
+		return returnVec; 
 	}
 
-	[[nodiscard]] constexpr auto fract() const -> Vec3<Type> { return Vec3<Type>{.x = x - std::floor(x), .y = y - std::floor(y), .z = z - std::floor(z)}; }
+	[[nodiscard]] constexpr auto fract() const -> Vec<Type> { 
+		Vec<Type> returnVec;
+		returnVec.components.resize(components.size(), (Type)0);
+		for(int i = 0; i < components.size(); i++){
+			returnVec[i] = components[i] - std::floor(components[i]);
+		}
+		return returnVec; 
+		}
 
-	[[nodiscard]] constexpr auto fade() const -> Vec3<Type> {
-		return Vec3<Type>{
-			.x = x * x * x * (x * (x * 6 - 15) + 10),
-			.y = y * y * y * (y * (y * 6 - 15) + 10),
-			.z = z * z * z * (z * (z * 6 - 15) + 10)
-		};
+	[[nodiscard]] constexpr auto fade() const -> Vec<Type> {
+		Vec<Type> returnVec;
+		returnVec.components.resize(components.size(), (Type)0);
+		for(int i = 0; i < components.size(); i++){
+			auto& c = components[i];
+			returnVec[i] = c * c * c * (c * (c * (Type)6 - (Type)15) + (Type)10);
+		}
+		return returnVec; 
 	}
 
-	constexpr auto operator+=(Vec3 const rhs) -> Vec3& {
-		x += rhs.x;
-		y += rhs.y;
-		z += rhs.z;
+	constexpr auto operator+=(Vec const rhs) -> Vec& {
+		assert(components.size() == rhs.components.size());
+		for(int i = 0; i < components.size(); i++){
+			components[i] += rhs.components[i];
+		}
 		return *this;
 	}
 
-	constexpr auto operator-=(Vec3 const rhs) -> Vec3& {
-		x -= rhs.x;
-		y -= rhs.y;
-		z -= rhs.z;
+	constexpr auto operator-=(Vec const rhs) -> Vec& {
+		assert(components.size() == rhs.components.size());
+		for(int i = 0; i < components.size(); i++){
+			components[i] -= rhs.components[i];
+		}
 		return *this;
 	}
 
-	constexpr auto operator*=(Vec3 const rhs) -> Vec3& {
-		x *= rhs.x;
-		y *= rhs.y;
-		z *= rhs.z;
+	constexpr auto operator*=(Vec const rhs) -> Vec& {
+		assert(components.size() == rhs.components.size());
+		for(int i = 0; i < components.size(); i++){
+			components[i] *= rhs.components[i];
+		}
 		return *this;
 	}
 
-	constexpr auto operator/=(Vec3 const rhs) -> Vec3& {
-		x /= rhs.x;
-		y /= rhs.y;
-		z /= rhs.z;
+	constexpr auto operator/=(Vec const rhs) -> Vec& {
+		assert(components.size() == rhs.components.size());
+		for(int i = 0; i < components.size(); i++){
+			components[i] /= rhs.components[i];
+		}
 		return *this;
 	}
 
-	friend constexpr auto operator+(Vec3 lhs, Vec3 const rhs) -> Vec3 { return lhs += rhs; }
-	friend constexpr auto operator-(Vec3 lhs, Vec3 const rhs) -> Vec3 { return lhs -= rhs; }
-	friend constexpr auto operator*(Vec3 lhs, Vec3 const rhs) -> Vec3 { return lhs *= rhs; }
-	friend constexpr auto operator/(Vec3 lhs, Vec3 const rhs) -> Vec3 { return lhs /= rhs; }
-	friend constexpr auto operator*(Vec3 lhs, Type const factor) -> Vec3 {return Vec3{.x = lhs.x * factor, .y = lhs.y * factor, .z = lhs.z * factor};}
-	friend constexpr auto operator/(Vec3 lhs, Type const divisor) -> Vec3 {return Vec3{.x = lhs.x / divisor, .y = lhs.y / divisor, .z = lhs.z / divisor};}
+	friend constexpr auto operator+(Vec lhs, Vec const rhs) -> Vec { return lhs += rhs; }
+	friend constexpr auto operator-(Vec lhs, Vec const rhs) -> Vec { return lhs -= rhs; }
+	friend constexpr auto operator*(Vec lhs, Vec const rhs) -> Vec { return lhs *= rhs; }
+	friend constexpr auto operator/(Vec lhs, Vec const rhs) -> Vec { return lhs /= rhs; }
 
-	auto operator==(Vec3 const&) const -> bool = default;
+	friend constexpr auto operator*(Vec lhs, Type const factor) -> Vec {
+		Vec<Type> returnVec;
+		returnVec.components.resize(lhs.components.size(), (Type)0);
+		for(int i = 0; i < lhs.components.size(); i++){
+			returnVec[i] = lhs.components[i] * factor;
+		}
+		return returnVec;
+	}
+	friend constexpr auto operator/(Vec lhs, Type const divisor) -> Vec {
+		Vec<Type> returnVec;
+		returnVec.components.resize(lhs.components.size(), (Type)0);
+		for(int i = 0; i < lhs.components.size(); i++){
+			returnVec[i] = lhs.components[i] / divisor;
+		}
+		return returnVec;
+	}
+
+	auto operator==(Vec const& rhs) const -> bool {
+        if (components.size() != rhs.components.size()) {
+            return false;
+        }
+        return std::all_of(components.begin(), components.end(),
+                           [&rhs](const T& element) { return std::find(rhs.components.begin(), rhs.components.end(), element) != rhs.components.end(); });
+    
+	}
 };
 
 template <std::floating_point Type>
-constexpr auto dot(Vec3<Type> const lhs, Vec3<Type> const rhs) -> Type {
-	return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z;
+constexpr auto dot(Vec<Type> const lhs, Vec<Type> const rhs) -> Type {
+	assert(lhs.components.size() == rhs.components.size());
+
+	Type dot_value = (Type)0;
+
+    dot_value = std::accumulate(
+					lhs.components.begin(), 
+					lhs.components.end(), 
+					(Type)0,
+					[&rhs](Type acc, const Type &element, size_t index) {
+						return acc + element * rhs.components[index];
+					}
+				);
+	
+
+	return dot_value;
 }
 
 template <std::floating_point Type>
-constexpr auto compare(Vec3<Type> const lhs, Vec3<Type> const rhs, Type const epsilon = Type(0.001)) {
-	return (std::abs(lhs.x - rhs.x) < epsilon) && (std::abs(lhs.y - rhs.y) < epsilon) && (std::abs(lhs.z - rhs.z) < epsilon);
+constexpr auto compare(Vec<Type> const lhs, Vec<Type> const rhs, Type const epsilon = Type(0.001)) {
+	if(lhs.components.size() != rhs.components.size()){
+		return false;
+	}
+	return std::all_of(lhs.components.begin(), lhs.components.end(),
+						[&rhs](const Type& element, Type const epsilon) { return (std::find(rhs.components.begin(), rhs.components.end(), element) - rhs.components.end()) < epsilon; });
 }
 
 template <std::floating_point Type>
-constexpr auto lerp(Vec3<Type> const lhs, Vec3<Type> const rhs, Type alpha) -> Vec3<Type> {
-	return Vec3<Type>{
-		.x = std::lerp(lhs.x, rhs.x, alpha),
-		.y = std::lerp(lhs.y, rhs.y, alpha),
-		.z = std::lerp(lhs.z, rhs.z, alpha)
-	};
+constexpr auto lerp(Vec<Type> const lhs, Vec<Type> const rhs, Type alpha) -> Vec<Type> {
+	assert(lhs.components.size() == rhs.components.size());
+
+	Vec<Type> return_vec;
+	return_vec.reserve(lhs.components.size());
+
+	std::transform(lhs.components.begin(), lhs.components.end(), rhs.components.begin(),
+				std::back_inserter(return_vec), [alpha](Type lhs_value, Type rhs_value) {
+					return std::lerp(lhs_value, rhs_value, alpha);
+				});
+
+	return return_vec;
 }
 
-using Vec3f = Vec3<float>;
-using Vec3d = Vec3<double>;
+using Vecf = Vec<float>;
+using Vecd = Vec<double>;
 } // namespace noiz

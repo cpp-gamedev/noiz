@@ -38,7 +38,7 @@ public:
 		Type amplitude = (Type)1;
 		Type normalizer = (Type)0;
 		for(int i = 0; i < octave; i++){
-			total += noise.at(point * frequency) * amplitude;
+			total += noise.at(point * step * frequency) * amplitude;
 			normalizer += amplitude;
 			amplitude *= persistence;
 			frequency *= lacunarity;
@@ -53,7 +53,7 @@ public:
 			Type sum = 0.f;
 			Type normalizer = 0.f;
 			for (int i = 0; i < octave; i++) {
-				sum += noise.at(point * frequency) * amplitude;
+				sum += noise.at(point * (step * frequency)) * amplitude;
 				normalizer += amplitude;
 				amplitude *= persistence;
 				frequency *= lacunarity;

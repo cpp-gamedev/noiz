@@ -39,7 +39,7 @@ public:
 		Type amplitude = (Type)1;
 		Type normalizer = (Type)0;
 		for(int i = 0; i < octave; i++){
-			total += noise.at(point * frequency) * amplitude;
+			total += noise.at(point * step * frequency) * amplitude;
 			normalizer += amplitude;
 			amplitude *= persistence;
 			frequency *= lacunarity;
@@ -54,7 +54,7 @@ public:
 			Type sum = 0.f;
 			Type normalizer = 0.f;
 			for (int i = 0; i < octave; i++) {
-				sum += noise.at(noiz::Vec2<Type>{.x = point.x * frequency, .y = point.y * frequency}) * amplitude;
+				sum += noise.at(point * (step * frequency)) * amplitude;
 				normalizer += amplitude;
 				amplitude *= persistence;
 				frequency *= lacunarity;
@@ -65,11 +65,11 @@ public:
 	}
 
 	auto billowy_processing(noiz::Vec2<Type> const& point) -> Type {
-		return std::abs(noise.at(point));
+		return std::abs(noise.at(point * step));
 	}
 
 	auto rigid_processing(noiz::Vec2<Type> const& point) -> Type {
-		return 1.f - std::abs(noise.at(point));
+		return 1.f - std::abs(noise.at(point * step));
 	}
 
 	auto hybrid_multi_fractal_processing(noiz::Vec2<Type> const& point) -> Type {
@@ -96,7 +96,7 @@ public:
 			}
 		}
 		/* get first octave of function */
-		result = (noise.at(tempPoint) + hbf_offset) * hbf_exponent_array[0];
+		result = (noise.at(tempPoint * step) + hbf_offset) * hbf_exponent_array[0];
 		weight = result;
 		/* increase frequency */
 		tempPoint = tempPoint * lacunarity;
@@ -105,7 +105,7 @@ public:
 			/* prevent divergence */
 			if (weight > 1.0) weight = 1.0;
 			/* get next higher frequency */
-			signal = (noise.at(tempPoint) + hbf_offset) * hbf_exponent_array[i];
+			signal = (noise.at(tempPoint * step) + hbf_offset) * hbf_exponent_array[i];
 			/* add it in, weighted by previous freq's local value */
 			result += weight * signal;
 			/* update the (monotonically decreasing) weighting value */
@@ -125,27 +125,6 @@ public:
 
 		return result;
 	}
-
-/*
-	auto blended_basic_processing(noiz::Vec2<Type> const& point, std::vector<Noise2<Type>> const& noise){
-		*each noise source would need its own set of variables
-
-		std::vector<octaves>
-		std::vector<steps>
-		std::vector<lacunarity>
-		...
-
-		Type sum = 0;
-		for(int i = 0; i < noise.size(); i++){
-			sum += basic_processing(point, noise[i]);
-		}
-		return sum / noise.size();
-
-		*this is probably beyond the scope of this lib
-		*end user could construct multiple objects of this class and it would be simpler than trying to implement it here
-		*probably simpler for the end user too, regardless of what kinda trickery is implemented
-	}
-*/
 
 };
 } //namespace noiz

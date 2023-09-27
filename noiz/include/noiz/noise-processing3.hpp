@@ -149,4 +149,6 @@ public:
 */
 
 };
+using Noise_Processor3f = Noise_Processor3<float>;
+using Noise_Processor3d = Noise_Processor3<double>;
 } //namespace noiz

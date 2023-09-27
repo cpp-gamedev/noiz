@@ -127,4 +127,6 @@ public:
 	}
 
 };
+using Noise_Processor2f = Noise_Processor2<float>;
+using Noise_Processor2d = Noise_Processor2<double>;
 } //namespace noiz

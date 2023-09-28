@@ -3,6 +3,7 @@
 #include "../seed.hpp"
 #include "../vec2.hpp"
 #include "../vec3.hpp"
+#include "../vec4.hpp"
 
 namespace noiz::detail {
 ///
@@ -43,6 +44,12 @@ class Generator {
 		out = Vec3<Type>{.x = distribution(m_engine), .y = distribution(m_engine), .z = distribution(m_engine)}.normalized();
 	}
 
+	template <std::floating_point Type>
+	void next(Vec4<Type>& out) {
+		auto distribution = std::uniform_real_distribution<Type>{Type{-1}, Type{1}};
+		out = Vec4<Type>{.x = distribution(m_engine), .y = distribution(m_engine), .z = distribution(m_engine), .w = distribution(m_engine)}.normalized();
+	}
+
 	///
 	/// \brief Obtain the next random unit Vec.
 	/// \returns The next random unit Vec.
@@ -56,6 +63,12 @@ class Generator {
 	template <std::floating_point Type>
 	auto next3() -> Vec3<Type> {
 		auto ret = Vec3<Type>{};
+		next(ret);
+		return ret;
+	}
+	template <std::floating_point Type>
+	auto next4() -> Vec4<Type> {
+		auto ret = Vec4<Type>{};
 		next(ret);
 		return ret;
 	}

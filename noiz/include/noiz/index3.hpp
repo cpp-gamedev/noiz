@@ -9,7 +9,7 @@ struct Index3 {
 	int z{};
 
 	[[nodiscard]] constexpr auto modulo(Index3 const extent) const -> Index3 {
-		assert(extent.x > 0 && extent.y > 0);
+		assert(extent.x > 0 && extent.y > 0 && extent.z > 0);
 		return Index3{.x = x % extent.x, .y = y % extent.y, .z = z % extent.z};
 	}
 

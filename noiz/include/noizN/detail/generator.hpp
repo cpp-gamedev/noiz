@@ -31,18 +31,6 @@ class Generator {
 	/// \param out The Vec to assign to.
 	///
 	template <std::floating_point Type>
-	void next(Vec2<Type>& out) {
-		auto distribution = std::uniform_real_distribution<Type>{Type{-1}, Type{1}};
-		out = Vec2<Type>{.x = distribution(m_engine), .y = distribution(m_engine)}.normalized();
-	}
-
-	template <std::floating_point Type>
-	void next(Vec3<Type>& out) {
-		auto distribution = std::uniform_real_distribution<Type>{Type{-1}, Type{1}};
-		out = Vec3<Type>{.x = distribution(m_engine), .y = distribution(m_engine), .z = distribution(m_engine)}.normalized();
-	}
-
-	template <std::floating_point Type>
 		void next(Vec<Type>& out) {
 		auto distribution = std::uniform_real_distribution<Type>{Type{-1}, Type{1}};
 		for(int i = 0; i < out.components.size(); i++){
@@ -55,17 +43,13 @@ class Generator {
 	/// \returns The next random unit Vec.
 	///
 	template <std::floating_point Type>
-	auto next2() -> Vec2<Type> {
-		auto ret = Vec2<Type>{};
+	auto nextN(uint8_t dimension_count) -> Vec<Type> {
+		auto ret = Vec<Type>{};
+		ret.components.resize(dimension_count);
 		next(ret);
 		return ret;
 	}
-	template <std::floating_point Type>
-	auto next3() -> Vec3<Type> {
-		auto ret = Vec3<Type>{};
-		next(ret);
-		return ret;
-	}
+
 
   private:
 	std::default_random_engine m_engine{};

@@ -1,18 +1,21 @@
 #pragma once
 #include "generator.hpp"
-#include "grid3.hpp"
+#include "grid.hpp"
 
 namespace noiz::detail {
 template <std::floating_point Type>
-auto make_populated_grid(Index3 const grid_extent, Seed seed = Generator::make_random_seed()) -> Grid3<Type> {
-	auto ret = make_grid3<Type>(grid_extent);
+auto make_populated_grid(Index3 const grid_extent, Seed seed = Generator::make_random_seed()) -> Grid<Type> {
+	auto ret = make_grid<Type>(grid_extent);
 	auto generator = Generator{seed};
 	for (auto& corner : ret.corners) { generator.next(corner.gradient); }
 	return ret;
 }
 
 template <std::floating_point Type>
-constexpr auto compute_offsets(CornerCell3<Type> const& corner, Vec3<Type> const point) -> Cell3<Type> {
+constexpr auto compute_offsets(CornerCell<Type> const& corner, Vec<Type> const point) -> Cell<Type> {
+
+	Cell<Type> ret;
+	ret.resize(corner.size());
 	return Cell3<Type>{
 		.left_top_below = point - corner.left_top_below.location,
 		.right_top_below = point - corner.right_top_below.location,

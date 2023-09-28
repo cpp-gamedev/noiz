@@ -3,17 +3,27 @@
 #include <cstdint>
 
 namespace noiz {
-struct Index3 {
-	int x{};
-	int y{};
-	int z{};
+struct Index {
+	std::vector<int> components;
 
-	[[nodiscard]] constexpr auto modulo(Index3 const extent) const -> Index3 {
-		assert(extent.x > 0 && extent.y > 0);
-		return Index3{.x = x % extent.x, .y = y % extent.y, .z = z % extent.z};
+	[[nodiscard]] constexpr auto modulo(Index const extent) const -> Index {
+		for(int i = 0; i < extent.components.size(); i++) {
+			assert(extent.component[i] > 0);
+		}
+		Index ret;
+		ret.components.resize(extent.components.size());
+		for(int i = 0; i < ret.components.size(); i++){
+			ret.components[i] = components[i] % extent.components[i];
+		}
 	}
 
-	[[nodiscard]] constexpr auto flatten(Index3 const extent) const -> int64_t { 
+	[[nodiscard]] constexpr auto flatten(Index const extent) const -> int64_t { 
+		assert(extent.components.size() == components.size());
+		int64_t ret = components.back();
+		const uint8_t dimension_count = components.size();
+		
+
+
 		return z * ((extent.x + 1) * (extent.y + 1)) + y * (extent.x + 1) + x;
 	}
 };

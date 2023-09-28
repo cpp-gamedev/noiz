@@ -5,22 +5,14 @@
 
 namespace noiz {
 template <std::floating_point Type>
-struct Corner3 {
+struct Corner {
 	Vec<Type> location{};
 	Vec<Type> gradient{};
 };
 
-template <typename Type>
+template <typename Vec_Type>
 struct TCell {
-	Type left_top_below{};
-	Type right_top_below{};
-	Type left_bottom_below{};
-	Type right_bottom_below{};
-	
-	Type left_top_above{};
-	Type right_top_above{};
-	Type left_bottom_above{};
-	Type right_bottom_above{};
+	std::vector<Vec_Type> corners;
 };
 
 template <std::floating_point Type>

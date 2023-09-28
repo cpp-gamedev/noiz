@@ -5,12 +5,17 @@
 
 namespace noiz::detail {
 template <std::floating_point Type>
-[[nodiscard]] constexpr auto to_index(Vec3<Type> const point) -> Index {
-	return Index{.x = static_cast<int>(point.x), .y = static_cast<int>(point.y), .z = static_cast<int>(point.z)};
+[[nodiscard]] constexpr auto to_index(Vec<Type> const point) -> Index {
+	Index ret;
+	ret.components.resize(point.components.size());
+	for(int i = 0; i < ret.components.size(); i++){
+		ret.components[i] = static_cast<int>(point.components[i]);
+	}
+	return ret;
 }
 
 template <std::floating_point Type>
-[[nodiscard]] constexpr auto to_vec(Index const index) -> Vec3<Type> {
+[[nodiscard]] constexpr auto to_vec(Index const index) -> Vec<Type> {
 	Vec<Type> returnVec;
 	returnVec.reserve(index.size());
 	for(int i = 0; i < index.size(); i++){
@@ -25,6 +30,8 @@ struct Grid {
 	Index grid_extent{};
 
 	[[nodiscard]] auto at(CellIndex const index) const -> CornerCell<Type> {
+		CornerCell<Type> ret;
+		
 		return CornerCell<Type>{
 			corners.at(index.ltb), corners.at(index.rtb), corners.at(index.lbb), corners.at(index.rbb),
 			corners.at(index.lta), corners.at(index.rta), corners.at(index.lba), corners.at(index.rba)
@@ -54,34 +61,26 @@ template <std::floating_point Type>
 		.grid_extent = grid_extent,
 	};
 
-	std::vector<int> component_position;
+	Index index;
 	auto const grid_dimensions = grid_extent.components.size();
-	component_position.resize(grid_dimensions, 0);
+	index.components.resize(grid_dimensions, 0);
 
+	auto back_dimension_grid_extent = grid_extent.components[grid_dimensions - 1] + 1;
+	auto& back_component_position = index.components[grid_dimensions - 1];
 
-	bool finished = false;
-	for(uint8_t dimension_position = 0; dimension_position < dimension_count;){
-
-	}
-
-	auto back_dimension_grid_extent = grid_extent.components.back() + 1;
-	auto& back_component_position = component_position[grid_dimensions - 1];
-
-	auto& first_dimension_position = component_position[0];
+	auto& first_dimension_position = cindex.components[0];
 	auto first_dimension_grid_extent = (grid_extent.components[0] + 1);
 
-	while(back_component_position < back_dimension_grid_extent){
+	do{
 		first_dimension_position++;
 		for(uint8_t i = 0; i < (dimension_count - 1); i++){
-			component_position[]
-			if(first_dimension_position == first_dimension_grid_extent){
-				component_position[1]++;
-				component_Position[dimension_position] = 0;
-				dimension_position++;
-			}
+			index.components[i + 1] += index.components[i] == (grid_extent.components[i] + 1);
+			index.components[i] %= grid_extent.components[i] + 1;
 		}
-
+		auto const flat_index = static_cast<std::size_t>(index.flatten(grid_extent));
+		ret.corners.at(index).location = to_vec<Type>(index);
 	}
+	while(back_component_position < back_dimension_grid_extent);
 
 
 	for(int depth = 0; depth <= grid_extent.z; ++depth) {

@@ -16,7 +16,7 @@ struct TCell {
 };
 
 template <std::floating_point Type>
-using Cell = TCell<Vec<Type>>;
+using Cell_Vec = TCell<Vec<Type>>;
 
 template <std::floating_point Type>
 using CornerCell = TCell<Corner<Type>>;

@@ -16,12 +16,13 @@ template <std::floating_point Type>
 
 template <std::floating_point Type>
 [[nodiscard]] constexpr auto to_vec(Index const index) -> Vec<Type> {
-	Vec<Type> returnVec;
-	returnVec.components.reserve(index.components.size());
+	Vec<Type> ret;
+	ret.components.reserve(index.components.size());
 	for(int i = 0; i < index.components.size(); i++){
-		returnVec.components.emplace_back(static_cast<Type>(index.components[0]));
+		ret.components.emplace_back(static_cast<Type>(index.components[0]));
 	}
 	//return Vec<Type>{.x = static_cast<Type>(index.x), .y = static_cast<Type>(index.y), .z = static_cast<Type>(index.z)};
+	return ret;
 }
 
 template <std::floating_point Type>
@@ -35,7 +36,7 @@ struct Grid {
 		ret.corners.resize(index.components.size());
 		
 		for(int i = 0; i < ret.corners.size(); i++){
-			ret.corners[i] = corners.at(index.components[0]);
+			ret.corners[i] = corners.at(index.components[i]);
 		}
 		return ret;
 	}
@@ -70,7 +71,7 @@ template <std::floating_point Type>
 
 	do{
 		auto const flat_index = index.flatten(grid_extent);
-		ret.corners.at(index).location = to_vec<Type>(index);
+		ret.corners.at(flat_index).location = to_vec<Type>(index);
 
 		first_dimension_position++;
 		for(uint8_t i = 0; i < (dimension_count - 1); i++){

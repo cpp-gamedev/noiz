@@ -36,12 +36,12 @@ auto main(int argc, char** argv) -> int {
 	//SeeN is kinda redundant, just too lazy to fix the includes
 	//different seeds may affect benchmarking time???
 	noiz::SeedN seedN{noiz::detail::GeneratorN::make_random_seed()}; 
-	auto noise3N = noiz::Noisef{noiz::SeedN{seedN}, grid_extentN3};
 
 
-	double two_dimensional_time_multiplier = 1000 / (two_dimensional_breadth * two_dimensional_breadth);
-	double three_dimensional_time_multiplier = 1000 / (three_dimensional_breadth * three_dimensional_breadth);
+	double two_dimensional_time_multiplier = (two_dimensional_breadth * two_dimensional_breadth);
+	double three_dimensional_time_multiplier = (three_dimensional_breadth * three_dimensional_breadth);
 
+	std::cout << "~ starting test ~ " << std::endl;
 	{
 		auto start_time = std::chrono::high_resolution_clock::now();
 
@@ -55,8 +55,8 @@ auto main(int argc, char** argv) -> int {
 			}
 		}
 		
-		auto duration_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - start_time).count();
-		std::cout << "nanoseconds for noise2 to produce 1000 points : " << duration_ns * two_dimensional_time_multiplier << std::endl;
+		auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count();
+		std::cout << "milliseconds for noise2 to process " << two_dimensional_time_multiplier << " points : " << duration_ms << std::endl;
 	}
 
 	{
@@ -73,8 +73,8 @@ auto main(int argc, char** argv) -> int {
 			}
 		}
 
-		auto duration_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - start_time).count();
-		std::cout << "nanoseconds for noise2N to produce 1000 points : " << duration_ns * two_dimensional_time_multiplier << std::endl;
+		auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count();
+		std::cout << "milliseconds for noise2N to process " << two_dimensional_time_multiplier << " points : " << duration_ms << std::endl;
 	}
 
 	{
@@ -93,14 +93,14 @@ auto main(int argc, char** argv) -> int {
 			}
 		}
 		
-		auto duration_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - start_time).count();
-		std::cout << "nanoseconds for noise3 to produce 1000 points : " << duration_ns * two_dimensional_time_multiplier << std::endl;
+		auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count();
+		std::cout << "milliseconds for noise3 to process " << three_dimensional_time_multiplier << " points : " << duration_ms << std::endl;
 	}
 
 	{
 		auto start_time = std::chrono::high_resolution_clock::now();
 
-		auto noise3 = noiz::Noisef{noiz::SeedN{seedN}, grid_extentN3};
+		auto noise3N = noiz::Noisef{noiz::SeedN{seedN}, grid_extentN3};
 		noiz::Vecf point;
 		point.components.resize(3);
 		for(int x = 0; x < three_dimensional_breadth; x++){
@@ -109,13 +109,13 @@ auto main(int argc, char** argv) -> int {
 					point.components[0] = static_cast<float>(x);
 					point.components[1] = static_cast<float>(y);
 					point.components[2] = static_cast<float>(z);
-					noise3.at(point); //NOLINT
+					noise3N.at(point); //NOLINT
 				}
 			}
 		}
 		
-		auto duration_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - start_time).count();
-		std::cout << "nanoseconds for noise3N to produce 1000 points : " << duration_ns * two_dimensional_time_multiplier << std::endl;
+		auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count();
+		std::cout << "milliseconds for noise3N to process " << three_dimensional_time_multiplier << " points : " << duration_ms << std::endl;
 	}
 
 	system("pause"); //NOLINT

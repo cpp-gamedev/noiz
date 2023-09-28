@@ -58,7 +58,7 @@ struct Vec {
 		Vec<Type> returnVec;
 		returnVec.components.resize(components.size(), (Type)0);
 		for(int i = 0; i < components.size(); i++){
-			returnVec[i] = components[i] - std::floor(components[i]);
+			returnVec.components[i] = components[i] - std::floor(components[i]);
 		}
 		return returnVec; 
 		}
@@ -68,7 +68,7 @@ struct Vec {
 		returnVec.components.resize(components.size(), (Type)0);
 		for(int i = 0; i < components.size(); i++){
 			auto& c = components[i];
-			returnVec[i] = c * c * c * (c * (c * (Type)6 - (Type)15) + (Type)10);
+			returnVec.components[i] = c * c * c * (c * (c * (Type)6 - (Type)15) + (Type)10);
 		}
 		return returnVec; 
 	}
@@ -138,19 +138,14 @@ struct Vec {
 };
 
 template <std::floating_point Type>
-constexpr auto dot(Vec<Type> const lhs, Vec<Type> const rhs) -> Type {
+constexpr auto dot(Vec<Type> const& lhs, Vec<Type> const& rhs) -> Type {
 	assert(lhs.components.size() == rhs.components.size());
 
 	Type dot_value = (Type)0;
 
-    dot_value = std::accumulate(
-					lhs.components.begin(), 
-					lhs.components.end(), 
-					(Type)0,
-					[&rhs](Type acc, const Type &element, size_t index) {
-						return acc + element * rhs.components[index];
-					}
-				);
+	for(int i = 0; i < lhs.components.size(); i++){
+		dot_value += lhs.components[i] * rhs.components[i];
+	}
 	
 
 	return dot_value;

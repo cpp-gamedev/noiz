@@ -1,6 +1,7 @@
 #pragma once
 #include "detail/data.hpp"
 
+
 namespace noiz {
 using GridExtent = Index;
 
@@ -20,9 +21,12 @@ class Noise {
 		point = point.modulo(detail::to_vec<Type>(m_grid.grid_extent));
 		auto const corners = m_grid.at(detail::to_index(point));
 		auto const offsets = detail::compute_offsets(corners, point);
+
 		auto const dots = detail::compute_dot_products(corners, offsets);
-		
-		return detail::interpolate(point, dots);
+		//std::cout << "interpolate" << std::endl;
+		auto const ret = detail::interpolate(point, dots);
+		//std::cout << "returning " << std::endl;
+		return ret;
 	}
 
 	uint8_t get_dimensions(){

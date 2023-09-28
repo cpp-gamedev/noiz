@@ -41,7 +41,7 @@ struct Index {
 struct CellIndex {
 	std::vector<std::size_t> components;
 
-	static constexpr auto make(Index index, Index const grid_extent) -> CellIndex {
+	static /*constexpr*/ auto make(Index index, Index const& grid_extent) -> CellIndex {
 		assert((index.components.size() == grid_extent.components.size()) && (index.components.size() > 0));
 
 		index = index.modulo(grid_extent);
@@ -78,7 +78,7 @@ struct CellIndex {
 			}
 			ret.components[i] *= factor;
 		}
-
+		//std::cout << "cellindex make size : " << ret.components.size() << std::endl;
 		return ret;
 	}
 };

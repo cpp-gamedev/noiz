@@ -12,7 +12,8 @@ struct Corner4 {
 
 template <typename Type>
 struct TCell4 {
-	std::array<Type, 16> corners;
+	//16 is 2^4 
+	std::array<Type, 16> corners; //NOLINT
 };
 
 template <std::floating_point Type>

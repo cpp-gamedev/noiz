@@ -1,17 +1,17 @@
 #pragma once
-#include "noise3.hpp"
+#include "noise4.hpp"
 
 
 namespace noiz{
 //static functions, maybe make members of noise2? not really sure
 template <std::floating_point Type>
-class Noise_Processor3 {
+class Noise_Processor4 {
 public:
-	explicit Noise_Processor3(noiz::Noise3<Type>& noise) : noise{noise}{}
+	explicit Noise_Processor4(noiz::Noise4<Type>& noise) : noise{noise}{}
 	//if this is multi-threaded, accessing these variables directly could lead to strange behavior
 	//i.e. a handful of threads processing noise, then another comes in and changes octave??
 	//not sure if thats a use case worth covering?
-	noiz::Noise3<Type>& noise;
+	noiz::Noise4<Type>& noise;
 
 	//default values
 	uint8_t octave{ 6 };
@@ -26,12 +26,12 @@ public:
 	Type hbf_offset = (Type)0.7;
 	std::vector<Type> hbf_exponent_array;
 
-	auto raw_noise(noiz::Vec3<Type> const& point) -> Type{
+	auto raw_noise(noiz::Vec4<Type> const& point) -> Type{
 		//redundant
 		return noise.at(point * step);
 	}
 
-	auto basic_processing(noiz::Vec3<Type> const& point) -> Type {
+	auto basic_processing(noiz::Vec4<Type> const& point) -> Type {
 		
 		Type total = Type(0);
 		Type frequency = (Type)2;
@@ -46,7 +46,7 @@ public:
 		return total/normalizer;
 	}
 
-	auto turbulence_processing(noiz::Vec3<Type> const& point) -> Type {
+	auto turbulence_processing(noiz::Vec4<Type> const& point) -> Type {
 		Type amplitude = this->amplitude;
 		Type frequency = this->frequency;
 		
@@ -63,22 +63,22 @@ public:
 			return sum;
 	}
 
-	auto billowy_processing(noiz::Vec3<Type> const& point) -> Type {
+	auto billowy_processing(noiz::Vec4<Type> const& point) -> Type {
 		return std::abs(noise.at(point * step));
 	}
 
-	auto rigid_processing(noiz::Vec3<Type> const& point) -> Type {
+	auto rigid_processing(noiz::Vec4<Type> const& point) -> Type {
 		return 1.f - std::abs(noise.at(point * step));
 	}
 
-	auto hybrid_multi_fractal_processing(noiz::Vec3<Type> const& point) -> Type {
-		//https://www.classes.cs.uchicago.edu/archive/2015/fall/23700-1/final-project/MusgraveTerrain00.pdf
+	auto hybrid_multi_fractal_processing(noiz::Vec4<Type> const& point) -> Type {
+		//https://www.classes.cs.uchicago.edu/archive/2015/fall/24700-1/final-project/MusgraveTerrain00.pdf
 		
 		//this function assumes the octave could be a floating point value
 		
 		//double HybridMultifractal( Vector point, double H, double lacunarity,
 		//double octaves, double offset )
-		noiz::Vec3<Type> tempPoint = point;
+		noiz::Vec4<Type> tempPoint = point;
 
 		Type frequency, result, signal, weight;//, remainder; if octave is floating
 
@@ -123,12 +123,12 @@ public:
 		*/
 
 	
-		//values from 0 to ~4 can be expected. highest value ive seen is 3.7
+		//values from 0 to ~4 can be expected. highest value ive seen is 4.7
 		return result;
 	}
 
 /*
-	auto blended_basic_processing(noiz::Vec3<Type> const& point, std::vector<Noise3<Type>> const& noise){
+	auto blended_basic_processing(noiz::Vec4<Type> const& point, std::vector<Noise4<Type>> const& noise){
 		*each noise source would need its own set of variables
 
 		std::vector<octaves>
@@ -149,6 +149,6 @@ public:
 */
 
 };
-using Noise_Processor3f = Noise_Processor3<float>;
-using Noise_Processor3d = Noise_Processor3<double>;
+using Noise_Processor4f = Noise_Processor4<float>;
+using Noise_Processor4d = Noise_Processor4<double>;
 } //namespace noiz

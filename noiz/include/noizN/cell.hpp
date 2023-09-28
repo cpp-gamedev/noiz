@@ -10,9 +10,9 @@ struct Corner {
 	Vec<Type> gradient{};
 };
 
-template <typename Vec_Type>
+template <typename Type>
 struct TCell {
-	std::vector<Vec_Type> corners;
+	std::vector<Type> corners;
 };
 
 template <std::floating_point Type>

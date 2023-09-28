@@ -42,12 +42,14 @@ struct Vec {
 	[[nodiscard]] auto is_normalized() const -> bool { return std::abs(sqr_magnitude() - Type(1)) < epsilon_v; }
 
 	[[nodiscard]] auto modulo(Vec<Type> const extent) const -> Vec<Type> {
-		assert(extent.x > Type(0) && extent.y > Type(0));
+		for(int i = 0; i < extent.components.size(); i++){
+			assert(extent.components[i] > (Type)0);
+		}
 		Vec<Type> returnVec;
 		returnVec.components.resize(components.size(), (Type)0);
-		for(int i = 0; i < components.size(); i++){
+		for(uint8_t i = 0; i < components.size(); i++){
 			assert(extent.components[i] > (Type)0);
-			returnVec[i] = std::fmod(components[i], extent.components[i]);
+			returnVec.components[i] = std::fmod(components[i], extent.components[i]);
 		}
 		return returnVec; 
 	}
@@ -130,7 +132,7 @@ struct Vec {
             return false;
         }
         return std::all_of(components.begin(), components.end(),
-                           [&rhs](const T& element) { return std::find(rhs.components.begin(), rhs.components.end(), element) != rhs.components.end(); });
+                           [&rhs](const Type& element) { return std::find(rhs.components.begin(), rhs.components.end(), element) != rhs.components.end(); });
     
 	}
 };

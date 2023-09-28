@@ -51,7 +51,7 @@ auto main(int argc, char** argv) -> int {
 			for(int y = 0; y < two_dimensional_breadth; y++){
 				point.x = static_cast<float>(x);
 				point.y = static_cast<float>(y);
-				noise2.at(point);
+				noise2.at(point); //NOLINT
 			}
 		}
 		
@@ -69,7 +69,7 @@ auto main(int argc, char** argv) -> int {
 			for(int y = 0; y < two_dimensional_breadth; y++){
 				point.components[0] = static_cast<float>(x);
 				point.components[1] = static_cast<float>(y);
-				noise2N.at(point);
+				noise2N.at(point); //NOLINT
 			}
 		}
 
@@ -88,7 +88,7 @@ auto main(int argc, char** argv) -> int {
 					point.x = static_cast<float>(x);
 					point.y = static_cast<float>(y);
 					point.z = static_cast<float>(z);
-					noise3.at(point);
+					noise3.at(point); //NOLINT
 				}
 			}
 		}
@@ -109,7 +109,7 @@ auto main(int argc, char** argv) -> int {
 					point.components[0] = static_cast<float>(x);
 					point.components[1] = static_cast<float>(y);
 					point.components[2] = static_cast<float>(z);
-					noise3.at(point);
+					noise3.at(point); //NOLINT
 				}
 			}
 		}

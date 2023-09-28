@@ -10,7 +10,7 @@ struct Index {
 
 	[[nodiscard]] constexpr auto modulo(Index const extent) const -> Index {
 		for(int i = 0; i < extent.components.size(); i++) {
-			assert(extent.component[i] > 0);
+			assert(extent.components[i] > 0);
 		}
 		Index ret;
 		ret.components.resize(extent.components.size());
@@ -22,10 +22,7 @@ struct Index {
 
 	[[nodiscard]] constexpr auto flatten(Index const extent) const -> std::size_t { 
 		assert(extent.components.size() == components.size());
-		std::size_t ret = components.back();
 		const uint8_t dimension_count = components.size();
-
-		uint8_t dimension_count = extent.components.size();
 
 		uint64_t ret = components[0];
 
@@ -40,35 +37,6 @@ struct Index {
 		return ret;
 	}
 };
-
-template <std::floating_point Type>
-static constexpr auto make_assistant() -> Type {
-	if(dimension_count > 1){
-		Type ret = (Type)0;
-
-		auto const value_a = interpolate_assistant(point, dot_products, dimension_count - 1, corner_index);
-		uint16_t corner_offset = 2;
-		for(int i = 1; i < dimension_count - 1; i++){
-			corner_offset *= 2;
-		}
-		
-		auto const value_b = interpolate_assistant(point, dot_products, dimension_count - 1, corner_offset);
-		return std::lerp(
-			value_a,
-			value_b,
-			cell_interpolated_position[dimension_count - 1]
-		);
-
-	}
-	else{
-		//currently in the first dimension, the final dimension to be calculated
-		return std::lerp(
-				dot_products.corners[corner_index],
-				dot_products.corners[corner_index + 1],
-				cell_interpolated_position[0];
-			);
-	}
-}
 
 struct CellIndex {
 	std::vector<std::size_t> components;

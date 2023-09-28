@@ -4,33 +4,35 @@
 
 namespace noiz::detail {
 template <std::floating_point Type>
-auto make_populated_grid(Index const grid_extent, Seed seed = Generator::make_random_seed()) -> Grid<Type> {
+auto make_populated_grid(Index const grid_extent, SeedN seed = GeneratorN::make_random_seed()) -> Grid<Type> {
 	auto ret = make_grid<Type>(grid_extent);
-	auto generator = Generator{seed};
+	auto generator = GeneratorN{seed};
 	for (auto& corner : ret.corners) { generator.next(corner.gradient); }
 	return ret;
 }
 
 template <std::floating_point Type>
-constexpr auto compute_offsets(CornerCell<Type> const& corner, Vec<Type> const point) -> Cell<Type> {
+constexpr auto compute_offsets(CornerCell<Type> const& corner_cell, Vec<Type> const point) -> Cell<Type> {
 
 	Cell<Type> ret;
-	ret.components.resize(corner.size());
+	ret.corners;
+	ret.corners.resize(corner_cell.corners.size());
 	
-	for(int i = 0; i < ret.components.size(); i++){
-		ret.components[i] = point - corner.location.components[i];
+	for(int i = 0; i < ret.corners.size(); i++){
+		
+		ret.corners[i] = point - corner_cell.corners[i].location;
 	}
 	return ret;
 }
 
 template <std::floating_point Type>
-constexpr auto compute_dot_products(CornerCell<Type> const& corner, Cell<Type> const& offset) -> TCell<Type> {
+constexpr auto compute_dot_products(CornerCell<Type> const& corner_cell, Cell<Type> const& offset) -> TCell<Type> {
 
 	Cell<Type> ret;
-	ret.components.resize(corner.size());
+	ret.corners.resize(corner.size());
 	
-	for(int i = 0; i < ret.components.size(); i++){
-		ret.components[i] = dot(corner.gradient.components[i], offset.components[i]);
+	for(int i = 0; i < ret.corners.size(); i++){
+		ret.corners[i] = dot(corner.gradient.components[i], offset.components[i]);
 	}
 	return ret;
 }
@@ -66,7 +68,7 @@ constexpr auto interpolate_assistant(Vec<Type> const point, TCell<Type> const& d
 		ret = std::lerp(
 				dot_products.corners[corner_index],
 				dot_products.corners[corner_index + 1],
-				cell_interpolated_position[0];
+				cell_interpolated_position[0]
 			);
 	}
 	return ret;
@@ -74,7 +76,7 @@ constexpr auto interpolate_assistant(Vec<Type> const point, TCell<Type> const& d
 
 
 template <std::floating_point Type>
-constexpr auto interpolate(Vec3<Type> const point, TCell3<Type> const& dot_products) -> Type {
+constexpr auto interpolate(Vec<Type> const point, TCell<Type> const& dot_products) -> Type {
 	auto const cell_interpolated_position = point.fract().fade();
 	uint8_t dimension_count = point.components.size();
 

@@ -18,13 +18,13 @@ class GeneratorN {
 	///
 	/// \brief Construct a Generator instance with a randomized seed.
 	///
-	explicit Generator() : Generator(make_random_seed()) {}
+	explicit GeneratorN() : GeneratorN(make_random_seed()) {}
 
 	///
 	/// \brief Construct a Generator instance with a custom seed.
 	/// \param seed Seed to initialize generator with .
 	///
-	explicit Generator(SeedN const seed) : m_engine(std::default_random_engine{static_cast<std::uint32_t>(seed)}) {}
+	explicit GeneratorN(SeedN const seed) : m_engine(std::default_random_engine{static_cast<std::uint32_t>(seed)}) {}
 
 	///
 	/// \brief Fill the next random unit Vec.

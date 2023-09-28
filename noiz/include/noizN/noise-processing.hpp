@@ -30,12 +30,12 @@ public:
 	Type hmf_offset = (Type)0.7;
 	std::vector<Type> hmf_exponent_array;
 
-	auto raw_noise(noiz::Vec3<Type> const& point) -> Type{
+	auto raw_noise(noiz::Vec<Type> const& point) -> Type{
 		//redundant
 		return noise.at(point * step);
 	}
 
-	auto basic_processing(noiz::Vec3<Type> const& point) -> Type {
+	auto basic_processing(noiz::Vec<Type> const& point) -> Type {
 		
 		Type total = Type(0);
 		Type frequency = (Type)2;
@@ -50,7 +50,7 @@ public:
 		return total/normalizer;
 	}
 
-	auto turbulence_processing(noiz::Vec3<Type> const& point) -> Type {
+	auto turbulence_processing(noiz::Vec<Type> const& point) -> Type {
 		Type amplitude = this->amplitude;
 		Type frequency = this->frequency;
 		
@@ -67,15 +67,15 @@ public:
 			return sum;
 	}
 
-	auto billowy_processing(noiz::Vec3<Type> const& point) -> Type {
+	auto billowy_processing(noiz::Vec<Type> const& point) -> Type {
 		return std::abs(noise.at(point * step));
 	}
 
-	auto rigid_processing(noiz::Vec3<Type> const& point) -> Type {
+	auto rigid_processing(noiz::Vec<Type> const& point) -> Type {
 		return 1.f - std::abs(noise.at(point * step));
 	}
 
-	auto hybrid_multi_fractal_processing(noiz::Vec3<Type> const& point) -> Type {
+	auto hybrid_multi_fractal_processing(noiz::Vec<Type> const& point) -> Type {
 		//https://www.classes.cs.uchicago.edu/archive/2015/fall/23700-1/final-project/MusgraveTerrain00.pdf
 		
 		//this function assumes the octave could be a floating point value

@@ -10,9 +10,9 @@ class Noise {
 	static constexpr GridExtent grid_extent_v{.components{256, 256}};
 
 
-	explicit Noise(GridExtent grid_extent = grid_extent_v) : Noise(dimension_count, detail::Generator::make_random_seed(), grid_extent) {}
+	explicit Noise(GridExtent grid_extent = grid_extent_v) : Noise(detail::GeneratorN::make_random_seed(), grid_extent) {}
 
-	explicit Noise(SeedN generator_seed, GridExtent grid_extent) : m_grid(detail::make_populated_grid<Type>(grid_extent, generator_seed)), dimension_count{grid_extent.components.size()} {}
+	explicit Noise(SeedN generator_seed, GridExtent grid_extent) : m_grid(detail::make_populated_grid<Type>(grid_extent, generator_seed)), dimension_count{static_cast<uint8_t>(grid_extent.components.size())} {}
 
 	[[nodiscard]] auto grid_extent() const -> GridExtent { return m_grid.grid_extent; }
 
@@ -30,7 +30,7 @@ class Noise {
 	}
   private:
 	detail::Grid<Type> m_grid{};
-	uint8_t dimensions; //constant??? const uint8_t giving me warnings
+	uint8_t dimension_count; //constant??? const uint8_t giving me warnings
 };
 
 using Noisef = Noise<float>;

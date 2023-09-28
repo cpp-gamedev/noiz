@@ -37,36 +37,39 @@ constexpr auto compute_dot_products(CornerCell<Type> const& corner, Cell<Type> c
 
 template <std::floating_point Type>
 constexpr auto interpolate_assistant(Vec<Type> const point, TCell<Type> const& dot_products, uint8_t dimension_count, Vec<Type> cell_interpolated_position, uint16_t corner_index) -> Type {
-	if(dimension_count > 1){
+
+	Type ret;
+	if(dimension_count > 1) {
 		Type ret = (Type)0;
 
 		//at the highest level, corner_index will be passed in as 0
 		//in 3 dimensions, i want to add 4
 		//2^3 == 8, /2 == 4
 		//2 ^ (dimensions - 1)
-		
 
 		auto const value_a = interpolate_assistant(point, dot_products, dimension_count - 1, corner_index);
 		uint16_t corner_offset = 2;
 		for(int i = 1; i < dimension_count - 1; i++){
 			corner_offset *= 2;
 		}
+		
 		auto const value_b = interpolate_assistant(point, dot_products, dimension_count - 1, corner_offset);
-		return std::lerp(
+		ret = std::lerp(
 			value_a,
 			value_b,
 			cell_interpolated_position[dimension_count - 1]
 		);
 
 	}
-	else{
+	else {
 		//currently in the first dimension, the final dimension to be calculated
-		return std::lerp(
+		ret = std::lerp(
 				dot_products.corners[corner_index],
 				dot_products.corners[corner_index + 1],
 				cell_interpolated_position[0];
 			);
 	}
+	return ret;
 }
 
 

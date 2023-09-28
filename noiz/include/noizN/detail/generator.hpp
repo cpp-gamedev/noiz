@@ -7,13 +7,13 @@ namespace noiz::detail {
 ///
 /// \brief Generators random normalized Vecs.
 ///
-class Generator {
+class GeneratorN {
   public:
 	///
 	/// \brief Make a random Seed.
 	/// \returns A random Seed.
 	///
-	[[nodiscard]] static auto make_random_seed() -> Seed { return Seed{std::random_device{}()}; }
+	[[nodiscard]] static auto make_random_seed() -> SeedN { return SeedN{std::random_device{}()}; }
 
 	///
 	/// \brief Construct a Generator instance with a randomized seed.
@@ -24,7 +24,7 @@ class Generator {
 	/// \brief Construct a Generator instance with a custom seed.
 	/// \param seed Seed to initialize generator with .
 	///
-	explicit Generator(Seed const seed) : m_engine(std::default_random_engine{static_cast<std::uint32_t>(seed)}) {}
+	explicit Generator(SeedN const seed) : m_engine(std::default_random_engine{static_cast<std::uint32_t>(seed)}) {}
 
 	///
 	/// \brief Fill the next random unit Vec.

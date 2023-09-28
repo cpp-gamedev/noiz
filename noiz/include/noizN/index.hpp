@@ -2,6 +2,8 @@
 #include <cassert>
 #include <cstdint>
 
+#include <vector>
+
 namespace noiz {
 struct Index {
 	std::vector<int> components;
@@ -15,44 +17,100 @@ struct Index {
 		for(int i = 0; i < ret.components.size(); i++){
 			ret.components[i] = components[i] % extent.components[i];
 		}
+		return ret;
 	}
 
-	[[nodiscard]] constexpr auto flatten(Index const extent) const -> int64_t { 
+	[[nodiscard]] constexpr auto flatten(Index const extent) const -> std::size_t { 
 		assert(extent.components.size() == components.size());
-		int64_t ret = components.back();
+		std::size_t ret = components.back();
 		const uint8_t dimension_count = components.size();
-		
 
+		uint8_t dimension_count = extent.components.size();
 
-		return z * ((extent.x + 1) * (extent.y + 1)) + y * (extent.x + 1) + x;
+		uint64_t ret = components[0];
+
+		for(int i = 1; i < dimension_count; i++){
+			uint64_t factor = extent.components[0];
+			for(int j = 1; j < i; j++){
+				factor *= extent.components[j];
+			}
+			ret += components[i] * factor;
+		}
+
+		return ret;
 	}
 };
 
-struct CellIndex3 {
-	std::size_t ltb{};
-	std::size_t rtb{};
-	std::size_t lbb{};
-	std::size_t rbb{};
+template <std::floating_point Type>
+static constexpr auto make_assistant() -> Type {
+	if(dimension_count > 1){
+		Type ret = (Type)0;
 
-	std::size_t lta{};
-	std::size_t rta{};
-	std::size_t lba{};
-	std::size_t rba{};
+		auto const value_a = interpolate_assistant(point, dot_products, dimension_count - 1, corner_index);
+		uint16_t corner_offset = 2;
+		for(int i = 1; i < dimension_count - 1; i++){
+			corner_offset *= 2;
+		}
+		
+		auto const value_b = interpolate_assistant(point, dot_products, dimension_count - 1, corner_offset);
+		return std::lerp(
+			value_a,
+			value_b,
+			cell_interpolated_position[dimension_count - 1]
+		);
 
-	static constexpr auto make(Index3 index, Index3 const grid_extent) -> CellIndex3 {
+	}
+	else{
+		//currently in the first dimension, the final dimension to be calculated
+		return std::lerp(
+				dot_products.corners[corner_index],
+				dot_products.corners[corner_index + 1],
+				cell_interpolated_position[0];
+			);
+	}
+}
+
+struct CellIndex {
+	std::vector<std::size_t> components;
+
+	static constexpr auto make(Index index, Index const grid_extent) -> CellIndex {
+		assert((index.components.size() == grid_extent.components.size()) && (index.components.size() > 0));
+
 		index = index.modulo(grid_extent);
 		auto const cell_index = index.flatten(grid_extent);
 		assert(cell_index >= 0);
-		auto ret = CellIndex3{};
-		ret.ltb = static_cast<std::size_t>(cell_index);
-		ret.rtb = ret.ltb + 1;
-		ret.lbb = ret.ltb + static_cast<std::size_t>(grid_extent.x + 1);
-		ret.rbb = ret.rtb + static_cast<std::size_t>(grid_extent.x + 1);
 
-		ret.lta = ret.ltb + static_cast<std::size_t>((grid_extent.x + 1) * (grid_extent.y + 1));
-		ret.rta = ret.rtb + static_cast<std::size_t>((grid_extent.x + 1) * (grid_extent.y + 1));
-		ret.lba = ret.lbb + static_cast<std::size_t>((grid_extent.x + 1) * (grid_extent.y + 1));
-		ret.rba = ret.rbb + static_cast<std::size_t>((grid_extent.x + 1) * (grid_extent.y + 1));
+		const uint8_t dimension_count = index.components.size();
+		uint8_t corner_count = 1;
+		std::vector<uint8_t> dimension_break_point;
+		dimension_break_point.reserve(dimension_count);
+		for(int i = 0; i < dimension_count; i++){
+			corner_count *= 2;
+			dimension_break_point.emplace_back(corner_count);
+		}
+		
+		auto ret = CellIndex{};
+		ret.components.resize(corner_count);
+
+		//1st dimension is implied
+		ret.components[0] = static_cast<std::size_t>(cell_index);
+		ret.components[1] = ret.components[0] + 1;
+
+		uint8_t current_dimension = 1;
+		for(int i = 2; i < corner_count; i++) {
+			current_dimension += i == dimension_break_point[current_dimension];
+
+			//const uint64_t& reference_index = dimension_break_point[current_dimension - 1];
+			//ret.components[i] = ret.components[reference_index];
+			ret.components[i] = ret.components[dimension_break_point[current_dimension - 1]];
+
+			size_t factor = 0;
+			for(int j = 0; j < current_dimension; j++){
+				factor += grid_extent.components[j];
+			}
+			ret.components[i] *= factor;
+		}
+
 		return ret;
 	}
 };

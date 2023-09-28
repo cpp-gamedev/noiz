@@ -1,17 +1,21 @@
 #pragma once
-#include "noise3.hpp"
+#include "noise.hpp"
 
 
 namespace noiz{
 //static functions, maybe make members of noise2? not really sure
 template <std::floating_point Type>
-class Noise_Processor3 {
+class Noise_Processor {
 public:
-	explicit Noise_Processor3(noiz::Noise3<Type>& noise) : noise{noise}{}
+	explicit Noise_Processor(noiz::Noise<Type>& noise) : noise{noise}, dimension_count{noise.get_dimensions()}{}
 	//if this is multi-threaded, accessing these variables directly could lead to strange behavior
 	//i.e. a handful of threads processing noise, then another comes in and changes octave??
 	//not sure if thats a use case worth covering?
-	noiz::Noise3<Type>& noise;
+protected:
+	uint8_t dimension_count;
+public:
+
+	noiz::Noise<Type>& noise;
 
 	//default values
 	uint8_t octave{ 6 };
@@ -22,9 +26,9 @@ public:
 	Type amplitude = (Type)1.0;
 
 	//hybrid multifractal variables, i have no idea what H is or id expand it to be mroe descriptive
-	Type hbf_H = (Type)0.25;
-	Type hbf_offset = (Type)0.7;
-	std::vector<Type> hbf_exponent_array;
+	Type hmf_H = (Type)0.25;
+	Type hmf_offset = (Type)0.7;
+	std::vector<Type> hmf_exponent_array;
 
 	auto raw_noise(noiz::Vec3<Type> const& point) -> Type{
 		//redundant
@@ -78,7 +82,7 @@ public:
 		
 		//double HybridMultifractal( Vector point, double H, double lacunarity,
 		//double octaves, double offset )
-		noiz::Vec3<Type> tempPoint = point;
+		noiz::Vec<Type> hmf_point = point;
 
 		Type frequency, result, signal, weight;//, remainder; if octave is floating
 
@@ -95,23 +99,23 @@ public:
 			}
 		}
 		/* get first octave of function */
-		result = (noise.at(tempPoint * step) + hbf_offset) * hbf_exponent_array[0];
+		result = (noise.at(hmf_point * step) + hbf_offset) * hbf_exponent_array[0];
 		weight = result;
 		/* increase frequency */
-		tempPoint = tempPoint * lacunarity;
+		hmf_point = hmf_point * lacunarity;
 		/* spectral construction inner loop, where the fractal is built */
 		for (uint16_t i = 1; i < octave; i++) {
 			/* prevent divergence */
 			if (weight > 1.0) {weight = 1.0;}
 			/* get next higher frequency */
-			signal = (noise.at(tempPoint * step) + hbf_offset) * hbf_exponent_array[i];
+			signal = (noise.at(hmf_point * step) + hbf_offset) * hbf_exponent_array[i];
 			/* add it in, weighted by previous freq's local value */
 			result += weight * signal;
 			/* update the (monotonically decreasing) weighting value */
 			/* (this is why H must specify a high fractal dimension) */
 			weight *= signal;
 			/* increase frequency */
-			tempPoint = tempPoint * lacunarity;
+			hmf_point = hmf_point * lacunarity;
 		}
 		
 		/* octave is currently an int, may swap for this
@@ -127,28 +131,7 @@ public:
 		return result;
 	}
 
-/*
-	auto blended_basic_processing(noiz::Vec3<Type> const& point, std::vector<Noise3<Type>> const& noise){
-		*each noise source would need its own set of variables
-
-		std::vector<octaves>
-		std::vector<steps>
-		std::vector<lacunarity>
-		...
-
-		Type sum = 0;
-		for(int i = 0; i < noise.size(); i++){
-			sum += basic_processing(point, noise[i]);
-		}
-		return sum / noise.size();
-
-		*this is probably beyond the scope of this lib
-		*end user could construct multiple objects of this class and it would be simpler than trying to implement it here
-		*probably simpler for the end user too, regardless of what kinda trickery is implemented
-	}
-*/
-
 };
-using Noise_Processor3f = Noise_Processor3<float>;
-using Noise_Processor3d = Noise_Processor3<double>;
+using Noise_Processorf = Noise_Processor<float>;
+using Noise_Processord = Noise_Processor<double>;
 } //namespace noiz

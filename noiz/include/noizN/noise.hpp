@@ -5,13 +5,14 @@ namespace noiz {
 using GridExtent = Index;
 
 template <std::floating_point Type>
-class Noise3 {
+class Noise {
   public:
-	static constexpr GridExtent grid_extent_v{256, 256, 256};
+	static constexpr GridExtent grid_extent_v{.components{256, 256}};
 
-	explicit Noise(uint8_t dimensions, GridExtent3 grid_extent = grid_extent_v) : Noise3(detail::Generator::make_random_seed(), grid_extent) {}
 
-	explicit Noise(uint8_t dimensions, Seed generator_seed, GridExtent3 grid_extent) : m_grid(detail::make_populated_grid<Type>(grid_extent, generator_seed)) {}
+	explicit Noise(GridExtent grid_extent = grid_extent_v) : Noise(dimension_count, detail::Generator::make_random_seed(), grid_extent) {}
+
+	explicit Noise(SeedN generator_seed, GridExtent grid_extent) : m_grid(detail::make_populated_grid<Type>(grid_extent, generator_seed)), dimension_count{grid_extent.components.size()} {}
 
 	[[nodiscard]] auto grid_extent() const -> GridExtent { return m_grid.grid_extent; }
 
@@ -24,8 +25,12 @@ class Noise3 {
 		return detail::interpolate(point, dots);
 	}
 
+	uint8_t get_dimensions(){
+		return dimension_count;
+	}
   private:
 	detail::Grid<Type> m_grid{};
+	uint8_t dimensions; //constant??? const uint8_t giving me warnings
 };
 
 using Noisef = Noise<float>;

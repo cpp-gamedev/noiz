@@ -1,5 +1,3 @@
-#include <noiz/noise2.hpp>
-
 #include <charconv>
 #include <format>
 #include <iostream>

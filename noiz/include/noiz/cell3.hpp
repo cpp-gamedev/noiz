@@ -12,15 +12,15 @@ struct Corner3 {
 
 template <typename Type>
 struct TCell3 {
-	Type left_top_below{};
-	Type right_top_below{};
-	Type left_bottom_below{};
-	Type right_bottom_below{};
+	Type left_top_front{};
+	Type right_top_front{};
+	Type left_bottom_front{};
+	Type right_bottom_front{};
 	
-	Type left_top_above{};
-	Type right_top_above{};
-	Type left_bottom_above{};
-	Type right_bottom_above{};
+	Type left_top_back{};
+	Type right_top_back{};
+	Type left_bottom_back{};
+	Type right_bottom_back{};
 };
 
 template <std::floating_point Type>

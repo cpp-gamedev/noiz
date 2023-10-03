@@ -53,7 +53,7 @@ class Generator {
 	///
 	/// \brief Obtain the next random unit Vec.
 	/// \returns The next random unit Vec.
-	/// //i dont think this is used anywhere
+	///
 	template <std::floating_point Type>
 	auto next2() -> Vec2<Type> {
 		auto ret = Vec2<Type>{};

@@ -21,8 +21,8 @@ struct Grid3 {
 
 	[[nodiscard]] auto at(CellIndex3 const index) const -> CornerCell3<Type> {
 		return CornerCell3<Type>{
-			corners.at(index.ltb), corners.at(index.rtb), corners.at(index.lbb), corners.at(index.rbb),
-			corners.at(index.lta), corners.at(index.rta), corners.at(index.lba), corners.at(index.rba)
+			corners.at(index.ltf), corners.at(index.rtf), corners.at(index.lbf), corners.at(index.rbf),
+			corners.at(index.ltb), corners.at(index.rtb), corners.at(index.lbb), corners.at(index.rbb)
 			};
 	}
 
@@ -44,7 +44,7 @@ template <std::floating_point Type>
 			for (int col = 0; col <= grid_extent.x; ++col) {
 				auto const index3 = Index3{.x = col, .y = row, .z = depth};
 				auto const index = static_cast<std::size_t>(index3.flatten(grid_extent));
-				ret.corners.at(index).location = to_vec3<Type>(Index3{.x = col, .y = row, .z = depth});
+				ret.corners.at(index).location = to_vec3<Type>(index3);
 			}
 		}
 	}

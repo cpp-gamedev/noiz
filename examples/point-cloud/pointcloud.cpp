@@ -16,7 +16,7 @@ constexpr int32_t constant_max_resolution_factor = 32;
 
 struct Config {
 	noiz::Seed seed{noiz::detail::Generator::make_random_seed()};
-	noiz::GridExtent3 grid_extent{256, 256, 256}; // NOLINT
+	noiz::GridExtent3 grid_extent{constant_base_resolution, constant_base_resolution, constant_base_resolution}; // NOLINT
 	float step{0.1f};					  // NOLINT
 	int image_size_factor{1};
 
@@ -32,9 +32,9 @@ struct Config {
 			return false;
 		}
         const int scaled_resolution = constant_base_resolution * image_size_factor;
-		grid_extent.x = scaled_resolution;
-		grid_extent.y = scaled_resolution;
-		grid_extent.z = scaled_resolution;
+		grid_extent.x *= image_size_factor;
+		grid_extent.y *= image_size_factor;
+		grid_extent.z *= image_size_factor;
 		return true;
 	}
 };
@@ -52,27 +52,6 @@ class Point_Cloud {
             float vertex_y;
 
             noiz::Noise_Processor3<float> noise_processor{noise};
-
-#if 0 //internal testing
-            noiz::Noise2f noise2;
-            noiz::Noise_Processor2<float> noise_processor2{noise2};
-
-            noiz::Vec3f testing_point;
-            noise_processor.basic_processing(testing_point);
-            noise_processor.billowy_processing(testing_point);
-            noise_processor.hybrid_multi_fractal_processing(testing_point);
-            noise_processor.rigid_processing(testing_point);
-            noise_processor.turbulence_processing(testing_point);
-            noise_processor.raw_noise(testing_point);
-
-            noiz::Vec2f testing_point2;
-            noise_processor2.basic_processing(testing_point2);
-            noise_processor2.billowy_processing(testing_point2);
-            noise_processor2.hybrid_multi_fractal_processing(testing_point2);
-            noise_processor2.rigid_processing(testing_point2);
-            noise_processor2.turbulence_processing(testing_point2);
-            noise_processor2.raw_noise(testing_point2);
-#endif
 
             for(int z = 0; z < image_size; z++){
                 vertex_z = (static_cast<float>(z) / static_cast<float>(image_size)) - 0.5f;

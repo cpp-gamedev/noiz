@@ -102,7 +102,7 @@ public:
 		// increase frequency
 		temp_point = temp_point * lacunarity;
 		// spectral construction inner loop, where the fractal is built
-		for (int i = 1; i < octave; i++) {
+		for (uint8_t i = 1; i < octave; i++) {
 			// prevent divergence
 			if (weight > 1.0) weight = 1.0;
 			// get next frequency

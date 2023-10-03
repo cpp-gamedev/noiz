@@ -25,7 +25,7 @@ struct Index4 {
 struct CellIndex4 {
 
 	//16 is 2^4
-	std::array<std::size_t, 16> positions; //NOLINT
+	std::array<std::size_t, 16> positions{};
 
 	static constexpr auto make(Index4 index, Index4 const grid_extent) -> CellIndex4 {
 		index = index.modulo(grid_extent);

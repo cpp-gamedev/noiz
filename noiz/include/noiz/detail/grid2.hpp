@@ -40,7 +40,7 @@ template <std::floating_point Type>
 		for (int col = 0; col <= grid_extent.x; ++col) {
 			auto const index2 = Index2{.x = col, .y = row};
 			auto const index = static_cast<std::size_t>(index2.flatten(grid_extent));
-			ret.corners.at(index).location = to_vec2<Type>(Index2{.x = col, .y = row});
+			ret.corners.at(index).location = to_vec2<Type>(index2);
 		}
 	}
 

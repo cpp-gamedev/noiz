@@ -7,6 +7,9 @@ using GridExtent2 = Index2;
 template <std::floating_point Type>
 class Noise2 {
   public:
+  using vec_type = Vec2<Type>;
+  using value_type = Type;
+
 	static constexpr GridExtent2 grid_extent_v{256, 256};
 
 	explicit Noise2(GridExtent2 grid_extent = grid_extent_v) : Noise2(detail::Generator::make_random_seed(), grid_extent) {}

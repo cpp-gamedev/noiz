@@ -8,8 +8,10 @@
 namespace noiz {
 template <std::floating_point Type>
 struct Vec2 {
-	static constexpr auto epsilon_v = Type(0.001);
+	using value_type = Type;
 
+	static constexpr auto epsilon_v = Type(0.001);
+	
 	Type x{};
 	Type y{};
 
@@ -20,8 +22,8 @@ struct Vec2 {
 	void normalize() {
 		auto const mag = magnitude();
 		assert(mag > Type(0));
-		x /= mag;
-		y /= mag;
+
+		*this = *this / mag;
 	}
 
 	[[nodiscard]] auto normalized() const -> Vec2 {
@@ -74,6 +76,11 @@ struct Vec2 {
 	friend constexpr auto operator-(Vec2 lhs, Vec2 const rhs) -> Vec2 { return lhs -= rhs; }
 	friend constexpr auto operator*(Vec2 lhs, Vec2 const rhs) -> Vec2 { return lhs *= rhs; }
 	friend constexpr auto operator/(Vec2 lhs, Vec2 const rhs) -> Vec2 { return lhs /= rhs; }
+
+	//i think this forces the factor/divisor to be the same type as the vec, aka float==float, or double==double,
+	//wont allow float*double? not really sure
+	friend constexpr auto operator*(Vec2 lhs, Type const factor) -> Vec2 {return Vec2{.x = lhs.x * factor, .y = lhs.y * factor};}
+	friend constexpr auto operator/(Vec2 lhs, Type const divisor) -> Vec2 {return Vec2{.x = lhs.x / divisor, .y = lhs.y / divisor};}
 
 	auto operator==(Vec2 const&) const -> bool = default;
 };

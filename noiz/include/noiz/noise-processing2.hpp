@@ -47,7 +47,7 @@ public:
 		
 		Type sum = 0.f;
 		Type normalizer = 0.f;
-		for (int i = 0; i < octave; i++) {
+		for (uint8_t i = 1; i < octave; i++) {
 			sum += noise.get().at(point * (step * frequency)) * amplitude;
 			normalizer += amplitude;
 			amplitude *= persistence;

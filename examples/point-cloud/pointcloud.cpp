@@ -31,7 +31,6 @@ struct Config {
 		if (!args.args.empty()) {
 			return false;
 		}
-        const int scaled_resolution = constant_base_resolution * image_size_factor;
 		grid_extent.x *= image_size_factor;
 		grid_extent.y *= image_size_factor;
 		grid_extent.z *= image_size_factor;

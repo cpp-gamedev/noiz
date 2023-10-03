@@ -1,5 +1,5 @@
 #include <noiz/noise3.hpp>
-#include <noiz/noise-processing3.hpp>
+#include <noiz/processing.hpp>
 
 #include <argument_parsing.hpp>
 
@@ -50,7 +50,7 @@ class Point_Cloud {
             float vertex_z;
             float vertex_y;
 
-            noiz::Noise_Processor3<float> noise_processor{noise};
+            noiz::Processor3f noise_processor{noise};
 
             for(int z = 0; z < image_size; z++){
                 vertex_z = (static_cast<float>(z) / static_cast<float>(image_size)) - 0.5f;
@@ -70,11 +70,12 @@ class Point_Cloud {
 #else //hybrid multi fractal noise
                         const float noise_value = noise_processor.hybrid_multi_fractal_processing(
                                 noiz::Vec3f{.x = static_cast<float>(x) * step, .y = static_cast<float>(y) * step, .z = static_cast<float>(z) * step}
-                            );
+                        );
                         if(noise_value > 2.0f){ //this should render a half of the points with hmf noise
 
                             //no point in assigning x here? just write it directly to
-                            out_file << "v " << ((static_cast<float>(x) / static_cast<float>(image_size)) - 0.5f) << " " << vertex_y << " " << vertex_z << '\n';
+							out_file << std::format("v {} {} {} '\n", (static_cast<float>(x) / static_cast<float>(image_size)) - 0.5f, vertex_y, vertex_z);
+                            //out_file << "v " << ((static_cast<float>(x) / static_cast<float>(image_size)) - 0.5f) << " " << vertex_y << " " << vertex_z << '\n';
                         } 
 #endif
                     }

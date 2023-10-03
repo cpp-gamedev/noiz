@@ -21,10 +21,10 @@ struct Grid4 {
 
 	[[nodiscard]] auto at(CellIndex4 const index) const -> CornerCell4<Type> {
 		return CornerCell4<Type>{
-			corners.at(index.at(0)), corners.at(index.at(1)), corners.at(index.at(2), corners.at(index.at(3)),
-			corners.at(index.at(4)), corners.at(index.at(5)), corners.at(index.at(6)), corners.at(index.at(7)),
-			corners.at(index.at(8)), corners.at(index.at(9)), corners.at(index.at(10), corners.at(index.at(11)),
-			corners.at(index.at(12)), corners.at(index.at(13)), corners.at(index.at(14)), corners.at(index.at(15))
+			corners.at(index.positions.at(0)), corners.at(index.positions.at(1)), corners.at(index.positions.at(2)), corners.at(index.positions.at(3)),
+			corners.at(index.positions.at(4)), corners.at(index.positions.at(5)), corners.at(index.positions.at(6)), corners.at(index.positions.at(7)),
+			corners.at(index.positions.at(8)), corners.at(index.positions.at(9)), corners.at(index.positions.at(10)), corners.at(index.positions.at(11)),
+			corners.at(index.positions.at(12)), corners.at(index.positions.at(13)), corners.at(index.positions.at(14)), corners.at(index.positions.at(15))
 		};
 	}
 

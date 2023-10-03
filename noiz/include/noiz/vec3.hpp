@@ -8,8 +8,10 @@
 namespace noiz {
 template <std::floating_point Type>
 struct Vec3 {
-	static constexpr auto epsilon_v = Type(0.001);
+	using value_type = Type;
 
+	static constexpr auto epsilon_v = Type(0.001);
+	
 	Type x{};
 	Type y{};
 	Type z{};

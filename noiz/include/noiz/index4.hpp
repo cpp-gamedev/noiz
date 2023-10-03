@@ -39,19 +39,19 @@ struct CellIndex4 {
 		ret.positions[1] = ret.positions[0] + 1;
 
 		//2nd dimension
-		for(int i = 2; i < 4; i++){
+		for(uint8_t i = 2; i < 4; i++){
 			ret.positions.at(i) = ret.positions.at(i - 2) + static_cast<std::size_t>(grid_extent.x + 1);
 		}
 
 		//3rd dimension
 		const auto dimension_offset3 = static_cast<std::size_t>((grid_extent.x + 1) * (grid_extent.y + 1));
-		for(int i = 4; i < 8; i++){
+		for(uint8_t i = 4; i < 8; i++){
 			ret.positions.at(i) = ret.positions.at(i - 4) + dimension_offset3;
 		}
 		
 		//4th dimension
 		const auto dimension_offset4 = dimension_offset3 * static_cast<std::size_t>(grid_extent.z + 1);
-		for(int i = 8; i < 16; i++){
+		for(uint8_t i = 8; i < 16; i++){
 			ret.positions.at(i) = ret.positions.at(i - 8) + dimension_offset4;
 		}
 

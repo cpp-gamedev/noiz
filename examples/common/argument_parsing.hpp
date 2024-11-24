@@ -1,6 +1,7 @@
 #include <charconv>
 #include <format>
 #include <iostream>
+#include <span>
 
 namespace {
 template <typename Type>

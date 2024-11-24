@@ -1,4 +1,4 @@
-#include <noiz/noise3.hpp>
+#include <noiz/noiseTemplate.hpp>
 #include <noiz/processing.hpp>
 
 #include <argument_parsing.hpp>
@@ -31,9 +31,10 @@ struct Config {
 		if (!args.args.empty()) {
 			return false;
 		}
-		grid_extent.x *= image_size_factor;
-		grid_extent.y *= image_size_factor;
-		grid_extent.z *= image_size_factor;
+
+		grid_extent.component[0] *= image_size_factor;
+		grid_extent.component[1] *= image_size_factor;
+		grid_extent.component[2] *= image_size_factor;
 		return true;
 	}
 };
@@ -69,7 +70,7 @@ class Point_Cloud {
                         } 
 #else //hybrid multi fractal noise
                         const float noise_value = noise_processor.hybrid_multi_fractal_processing(
-                                noiz::Vec3f{.x = static_cast<float>(x) * step, .y = static_cast<float>(y) * step, .z = static_cast<float>(z) * step}
+                                noiz::ConstructVector(static_cast<float>(x) * step, static_cast<float>(y) * step, static_cast<float>(z) * step)
                         );
                         if(noise_value > 2.0f){ //this should render a half of the points with hmf noise
 

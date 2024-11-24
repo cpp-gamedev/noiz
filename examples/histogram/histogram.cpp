@@ -1,4 +1,4 @@
-#include <noiz/noise2.hpp>
+#include <noiz/noiseTemplate.hpp>
 #include <charconv>
 #include <filesystem>
 #include <format>
@@ -82,7 +82,7 @@ auto main(int argc, char** argv) -> int {
 	auto histogram = Histogram{};
 	for (int i = 0; i < config.count; ++i) {
 		// build point on line (y = 0)
-		auto const point = noiz::Vec2f{.x = static_cast<float>(i) * config.step};
+		const auto point = noiz::ConstructVector(static_cast<float>(i) * config.step, 0.0f);
 		// add noise at point
 		histogram.add(noise.at(point));
 	}

@@ -1,6 +1,4 @@
-#include "noise2.hpp"
-#include "noise3.hpp"
-#include "noise4.hpp"
+#include "noiseTemplate.hpp"
 
 #pragma once
 

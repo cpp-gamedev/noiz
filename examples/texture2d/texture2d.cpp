@@ -1,4 +1,4 @@
-#include <noiz/noise2.hpp>
+#include <noiz/noiseTemplate.hpp>
 
 #include <argument_parsing.hpp>
 
@@ -36,8 +36,8 @@ struct Config {
 		if (!args.args.empty()) {
 			return false;
 		}
-		grid_extent.x = constant_base_resolution * image_size_factor;
-		grid_extent.y = constant_base_resolution * image_size_factor;
+		grid_extent.component[0] = constant_base_resolution * image_size_factor;
+		grid_extent.component[1] = constant_base_resolution * image_size_factor;
 		return true;
 	}
 };
@@ -55,7 +55,7 @@ class Texture_2D {
 			for (int y = 0; y < image_size; y++) {
 				for(int x = 0; x < image_size; x++) {
 				// add noise at point
-					float adjusted_noise = noise.at(noiz::Vec2f{.x = static_cast<float>(x) * step, .y = static_cast<float>(y) * step});
+					float adjusted_noise = noise.at(noiz::ConstructVector(static_cast<float>(x) * step, static_cast<float>(y) * step));
 					adjusted_noise = (adjusted_noise + 1.f) * 0.5f;
 					grayscale_color = static_cast<uint8_t>((adjusted_noise) * 255.f);
 					for(int i = 0; i < 3; i++) {
